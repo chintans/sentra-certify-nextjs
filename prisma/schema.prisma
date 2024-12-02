@@ -1,0 +1,150 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Assuming PostgreSQL based on the types used
+  url      = env("DATABASE_URL")
+}
+
+model AuthUser {
+  id               String                     @id @default(uuid()) @db.Uuid  // Added @db.Uuid
+  firstName        String
+  lastName         String
+  email           String
+  tenantId        String                     @db.Uuid
+  company         Company                    @relation(fields: [companyId], references: [id])
+  companyId       String                     @db.Uuid
+  verifierMappings VerifierCertificateMapping[]
+  roles            Role[]
+  companyMappings  UserCompanyMapping[]
+}
+
+model Company {
+  id                 String           @id @default(uuid()) @db.Uuid
+  name               String
+  tenantId           String           @db.Uuid
+  email              String
+  imageUrl           String?
+  users              AuthUser[]
+  certificateRequests CertificateRequests[]
+}
+
+model UserCompanyMapping {
+  id       String  @id @default(uuid()) @db.Uuid
+  userId   String  @db.Uuid
+  tenantId String  @db.Uuid
+  user     AuthUser @relation(fields: [userId], references: [id])
+}
+
+model Role {
+  id    String     @id @default(uuid()) @db.Uuid
+  name  String
+  users AuthUser[]
+}
+
+model CertificateTypes {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  certificateRequests CertificateRequests[]
+}
+
+model CertificateRequests {
+  id                 Int                   @id @default(autoincrement())
+  tenantId           String                @db.Uuid
+  certificateName    String?
+  requestDate        DateTime
+  dueDate            DateTime
+  status             Status
+  stage              Stage
+  frequency          CertificateFrequency
+  certificateType    CertificateTypes      @relation(fields: [certificateTypeId], references: [id])
+  certificateTypeId  Int
+  sampleData         SampleData[]
+  comments           CertificateRequestComments[]
+  verifierMappings   VerifierCertificateMapping[]
+  company            Company               @relation(fields: [companyId], references: [id])
+  companyId          String                @db.Uuid
+}
+
+model CertificateRequestComments {
+  id                 Int                @id @default(autoincrement())
+  comment            String
+  senderName         String
+  timestamp          DateTime
+  certificateRequest CertificateRequests @relation(fields: [certificateRequestId], references: [id])
+  certificateRequestId Int
+}
+
+model SampleData {
+  id                 Int                @id @default(autoincrement())
+  assetLevel         String
+  frequency          String
+  docName            String
+  description        String?
+  fromDate           DateTime
+  toDate             DateTime
+  activityDataValue  Float?
+  emissionFactor     Float?
+  scopeName          String
+  absolute           Float
+  intensity          Float
+  certificateRequest CertificateRequests @relation(fields: [certificateRequestId], references: [id])
+  certificateRequestId Int
+  sampleProofs      SampleProof[]
+}
+
+model SampleProof {
+  id            Int           @id @default(autoincrement())
+  proofName     String
+  proofLink     String
+  sampleId      Int?
+  proofCategory ProofCategory
+  sampleData    SampleData    @relation(fields: [sampleDataId], references: [id])
+  sampleDataId  Int
+}
+
+model VerifierCertificateMapping {
+  id                  Int                @id @default(autoincrement())
+  verifierId          String             @db.Uuid
+  certificateRequestId Int
+  certificateRequest  CertificateRequests @relation(fields: [certificateRequestId], references: [id])
+  verifier           AuthUser            @relation(fields: [verifierId], references: [id])
+}
+
+// ... existing code ...
+
+enum Status {
+  NotStarted     @map("0")
+  Assigned       @map("1")
+  OnTime         @map("2")
+  ActionRequired @map("3")
+  Completed      @map("4")
+  Delayed        @map("5")
+}
+
+enum Stage {
+  DataCollection   @map("0")
+  DataCalculation  @map("1")
+  Verification     @map("2")
+  Certification    @map("3")
+}
+
+enum CertificateFrequency {
+  OneTime     @map("0")
+  Continuous  @map("1")
+}
+
+enum ProofCategory {
+  ActivityData    @map("0")
+  EmissionFactor  @map("1")
+  Absolute        @map("2")
+  Intensity       @map("3")
+}
+
+enum UserRole {
+  Admin  @map("0")
+  User   @map("1")
+}
