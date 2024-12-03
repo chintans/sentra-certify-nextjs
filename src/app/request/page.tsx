@@ -61,7 +61,7 @@ export default function RequestPage() {
     setIsDialogOpen(false);
   };
 
-  const handleRowClick = (id) => {
+  const handleRowClick = (id: number) => {
     router.push(`/request/${id}`);
   };
 

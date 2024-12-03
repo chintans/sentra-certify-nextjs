@@ -112,7 +112,7 @@ export default function GenerateSampleResultPage() {
               <p className="text-right">Me</p>
             </div>
             <div className="bg-gray-800 p-4 rounded-lg text-white mt-4">
-              <p>Great to hear. Send over the details, and let's go through it together. Any specific areas you want me to pay extra attention to?</p>
+              <p>Great to hear. Send over the details, and let&apos;s go through it together. Any specific areas you want me to pay extra attention to?</p>
               <p className="text-right">Kavita</p>
             </div>
           </div>

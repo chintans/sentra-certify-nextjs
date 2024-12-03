@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   CertificateRequestListDto,
+  CompanyResult,
   OngoingRequestDto,
 } from "@/types/certificate";
 
@@ -27,6 +28,16 @@ export async function getOngoingRequestById(
 ): Promise<OngoingRequestDto> {
   const { data } = await axios.get(`/api/ongoing-request`, {
     params: { requestId }
+  });
+  return data;
+}
+
+
+export async function getCompaniesByEmail(
+  email: string
+): Promise<CompanyResult[]> {
+  const { data } = await axios.get(`/api/companies`, {
+    params: { email }
   });
   return data;
 }
