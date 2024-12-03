@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { OngoingRequestDto } from '@/types/certificate';
+import { OngoingRequestDto, Comment } from '@/types/certificate';
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       requestDate: certificateRequest.requestDate,
       completionDate: certificateRequest.dueDate,
       status: certificateRequest.status,
-      comments: certificateRequest.comments.map(comment => ({
+      comments: certificateRequest.comments.map((comment: Comment) => ({
         sender: comment.senderName,
         comment: comment.comment
       }))
