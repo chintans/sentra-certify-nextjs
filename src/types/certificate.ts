@@ -29,7 +29,7 @@ export interface RequestDto {
   export interface Company{
     name: string;
     tenantId: string;
-    imageURl: string;
+    imageUrl: string | null;
     certificateRequests: {
         tenantId: string;
         status: string;

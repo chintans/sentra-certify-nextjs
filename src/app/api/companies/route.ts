@@ -20,19 +20,17 @@ export async function GET(request: Request) {
                 }
             },
             include: {
-                userRoles: {
-                    include: {
-                        role: true
-                    }
+                roles: true
+                    
                 }
             }
-        });
+        );
 
-        if (!userInfo?.userRoles?.[0]?.role?.name) {
+        if (!userInfo?.roles?.[0].name) {
             return NextResponse.json([]);
         }
 
-        const companies = await prisma.levelCOrgcompany.findMany({
+        const companies = await prisma.company.findMany({
             include: {
                 certificateRequests: true
             }
@@ -41,7 +39,7 @@ export async function GET(request: Request) {
         const result = companies.map((company:Company)=> ({
             name: company.name,
             companyId: company.tenantId,
-            imageUrl: company.imageURl,
+            imageUrl: company.imageUrl?? '',
             onGoing: company.certificateRequests.filter(
                 r => r.tenantId === company.tenantId && r.status !== 'COMPLETED'
             ).length,
@@ -51,7 +49,7 @@ export async function GET(request: Request) {
         }));
 
         // If admin, return all companies
-        if (userInfo.userRoles[0].role.name === 'ADMIN') {
+        if (userInfo.roles[0].name === 'ADMIN') {
             return NextResponse.json(result);
         }
 

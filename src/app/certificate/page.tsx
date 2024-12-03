@@ -2,91 +2,69 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { getCompaniesByEmail } from '@/services/certificateService';
+import { CompanyResult } from '@/types/certificate';
 
-interface CompanyCard {
-  name: string;
-  logo?: string;
-  ongoing: number;
-  completed: number;
-  bgColor?: string;
-}
-
-const companies: CompanyCard[] = [
-  {
-    name: 'VOLVO',
-    logo: '/company-logos/volvo.png',
-    ongoing: 3,
-    completed: 0,
-  },
-  {
-    name: 'RKFL',
-    ongoing: 3,
-    completed: 0,
-    bgColor: 'bg-[#6366f1]',
-  },
-  {
-    name: 'SteelCorp',
-    ongoing: 1,
-    completed: 0,
-    bgColor: 'bg-[#6366f1]',
-  },
-  {
-    name: 'Arjas Steel',
-    ongoing: 0,
-    completed: 0,
-    bgColor: 'bg-[#6366f1]',
-  },
-  {
-    name: 'My company QA',
-    ongoing: 0,
-    completed: 0,
-    bgColor: 'bg-[#6366f1]',
-  },
-  {
-    name: 'Beta Testing',
-    logo: '/company-logos/beta-testing.png',
-    ongoing: 0,
-    completed: 0,
-  }
-];
 
 export default function Certificate() {
   const router = useRouter();
+  const [companies, setCompanies] = useState<CompanyResult[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleCompanyClick = (companyName: string) => {
-    router.push(`/request?company=${companyName}`);
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const data = await getCompaniesByEmail('user@example.com');
+        setCompanies(data);
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  const handleCompanyClick = (companyId: string) => {
+    router.push(`/request?company=${companyId}`);
   };
+
+  if (loading) {
+    return <div className="p-8 text-white">Loading...</div>;
+  }
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-semibold text-white mb-8">New Request</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {companies.map((company, index) => (
+        {companies.map((company) => (
           <div 
-            key={index} 
+            key={company.companyId} 
             className="bg-[#1c1c24] rounded-lg overflow-hidden cursor-pointer hover:bg-[#2a2a36] transition-colors"
-            onClick={() => handleCompanyClick(company.name)}
+            onClick={() => handleCompanyClick(company.companyId)}
           >
             {/* Company Logo/Name Section */}
             <div className="h-48 relative flex items-center justify-center">
-              {company.logo ? (
+              {company.imageUrl ? (
                 <Image
-                  src={company.logo}
+                  src={company.imageUrl}
                   alt={company.name}
                   width={200}
                   height={100}
                   className="object-contain"
                 />
               ) : (
-                <div className={`w-full h-full ${company.bgColor || 'bg-gray-700'} flex items-center justify-center`}>
+                <div className="w-full h-full bg-[#6366f1] flex items-center justify-center">
                   <span className="text-2xl text-white font-semibold">{company.name}</span>
                 </div>
               )}
               {/* Notification Badge */}
-              {(company.ongoing > 0) && (
+              {(company.onGoing > 0) && (
                 <div className="absolute top-4 right-4 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center">
-                  {company.ongoing}
+                  {company.onGoing}
                 </div>
               )}
             </div>
@@ -96,7 +74,7 @@ export default function Certificate() {
               <div className="flex justify-between items-center text-sm">
                 <div>
                   <span className="text-gray-400">Ongoing</span>
-                  <span className="text-white ml-4">: {company.ongoing}</span>
+                  <span className="text-white ml-4">: {company.onGoing}</span>
                 </div>
                 <div>
                   <span className="text-gray-400">Completed</span>
