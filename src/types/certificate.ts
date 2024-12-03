@@ -24,6 +24,8 @@ export interface RequestDto {
     completionDate: Date;
     status: string;
     comments: CommentsDto[];
+    members?: string;
+    technicalReviewer?: string;
   }
 
   export interface Company{
@@ -48,3 +50,11 @@ export interface RequestDto {
     senderName: string;
     comment: string;
   }
+
+  export interface CompanyRequestCountDto {
+    name: string;
+    companyId: string;
+    imageUrl: string | null;
+    onGoing: number;
+    completed: number;
+}
