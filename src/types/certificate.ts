@@ -53,7 +53,7 @@ export interface RequestDto {
 
   export interface CompanyRequestCountDto {
     name: string;
-    companyId: string;
+    companyId: number;
     imageUrl: string | null;
     onGoing: number;
     completed: number;

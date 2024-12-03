@@ -28,21 +28,22 @@ export default function Certificate() {
   }, []);
 
   const handleCompanyClick = (companyId: string) => {
-    router.push(`/request?company=${companyId}`);
+    router.push(`/certificate/${companyId}/request`);
   };
 
   if (loading) {
     return <div className="p-8 text-white">Loading...</div>;
   }
 
+  
   return (
     <div className="p-8">
       <h1 className="text-2xl font-semibold text-white mb-8">New Request</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {companies.map((company) => (
+        {companies.map((company, index) => (
           <div 
-            key={company.companyId} 
+            key={index} 
             className="bg-[#1c1c24] rounded-lg overflow-hidden cursor-pointer hover:bg-[#2a2a36] transition-colors"
             onClick={() => handleCompanyClick(company.companyId)}
           >
@@ -57,7 +58,7 @@ export default function Certificate() {
                   className="object-contain"
                 />
               ) : (
-                <div className="w-full h-full bg-[#6366f1] flex items-center justify-center">
+                <div className={`w-full h-full bg-[#6366f1] flex items-center justify-center`}>
                   <span className="text-2xl text-white font-semibold">{company.name}</span>
                 </div>
               )}
