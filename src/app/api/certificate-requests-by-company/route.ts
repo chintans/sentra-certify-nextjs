@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma'; 
 import { CertificateRequestListDto } from '@/types/certificate';
+import { CertificateRequests } from '@prisma/client/edge';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +16,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch certificate requests and company details
     const [requests, company] = await Promise.all([
       prisma.certificateRequests.findMany({
         where: {
@@ -39,9 +39,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Transform the data
     const response: CertificateRequestListDto = {
-      requests: requests.map(request => ({
+      requests: requests.map((request: CertificateRequests & { certificateType: { name: string } }) => ({
         id: request.id,
         certificateType: request.certificateType.name,
         customerName: company.name,

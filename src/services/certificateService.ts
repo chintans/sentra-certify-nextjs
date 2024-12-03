@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   CertificateRequestListDto,
   OngoingRequestDto,
@@ -6,39 +7,26 @@ import {
 export async function getCertificateRequests(
   companyId: string
 ): Promise<CertificateRequestListDto> {
-  const response = await fetch(
-    `/api/certificate-requests-by-company?companyId=${companyId}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch certificate requests");
-  }
-
-  return response.json();
+  const { data } = await axios.get(`/api/certificate-requests-by-company`, {
+    params: { companyId }
+  });
+  return data;
 }
 
 export async function getOngoingRequests(
   companyId: string
 ): Promise<OngoingRequestDto[]> {
-  const response = await fetch(
-    `/api/certificate-ongoing?companyId=${companyId}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch ongoing requests");
-  }
-
-  return response.json();
+  const { data } = await axios.get(`/api/certificate-ongoing`, {
+    params: { companyId }
+  });
+  return data;
 }
 
 export async function getOngoingRequestById(
   requestId: string
 ): Promise<OngoingRequestDto> {
-  const response = await fetch(`/api/ongoing-request?requestId=${requestId}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch ongoing request");
-  }
-
-  return response.json();
+  const { data } = await axios.get(`/api/ongoing-request`, {
+    params: { requestId }
+  });
+  return data;
 }
