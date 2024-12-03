@@ -1,21 +1,32 @@
-import { SampleDto, SampleProofDto } from "@/types/sample";
+import axios from 'axios';
+import {
+  CertificateRequestListDto,
+  OngoingRequestDto,
+} from "@/types/certificate";
 
-export async function getSampleData(certificateId: string): Promise<SampleDto[]> {
-    const response = await fetch(`/api/sample-data?certificateId=${certificateId}`);
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch sample data');
-    }
-  
-  return response.json();
+export async function getCertificateRequests(
+  companyId: string
+): Promise<CertificateRequestListDto> {
+  const { data } = await axios.get(`/api/certificate-requests-by-company`, {
+    params: { companyId }
+  });
+  return data;
 }
 
-export async function getSampleProofs(sampleId: string, proofCategory: number): Promise<SampleProofDto[]> {
-    const response = await fetch(`/api/sample-proofs?sampleId=${sampleId}&proofCategory=${proofCategory}`);
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch sample proofs');
-    }
-  
-    return response.json();
-  }
+export async function getOngoingRequests(
+  companyId: string
+): Promise<OngoingRequestDto[]> {
+  const { data } = await axios.get(`/api/certificate-ongoing`, {
+    params: { companyId }
+  });
+  return data;
+}
+
+export async function getOngoingRequestById(
+  requestId: string
+): Promise<OngoingRequestDto> {
+  const { data } = await axios.get(`/api/ongoing-request`, {
+    params: { requestId }
+  });
+  return data;
+}

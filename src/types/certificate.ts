@@ -25,3 +25,26 @@ export interface RequestDto {
     status: string;
     comments: CommentsDto[];
   }
+
+  export interface Company{
+    name: string;
+    tenantId: string;
+    imageUrl: string | null;
+    certificateRequests: {
+        tenantId: string;
+        status: string;
+    }[];
+  }
+
+  export interface CompanyResult{
+    name: string;
+    companyId: string;
+    imageUrl: string;
+    onGoing: number;
+    completed: number;
+  }
+
+  export interface Comment{
+    senderName: string;
+    comment: string;
+  }
