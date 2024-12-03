@@ -10,37 +10,40 @@ datasource db {
 }
 
 model AuthUser {
-  id               String                     @id @default(uuid()) @db.Uuid  // Added @db.Uuid
+  id               Int                        @id @default(autoincrement()) 
   firstName        String
   lastName         String
   email           String
   tenantId        String                     @db.Uuid
   company         Company                    @relation(fields: [companyId], references: [id])
-  companyId       String                     @db.Uuid
+  companyId       Int                   
   verifierMappings VerifierCertificateMapping[]
-  roles            Role[]
+  role             Role                       @relation(fields: [roleId], references: [id]) // Changed from roles to role
+  roleId           Int 
   companyMappings  UserCompanyMapping[]
 }
 
 model Company {
-  id                 String           @id @default(uuid()) @db.Uuid
+  id               Int                        @id @default(autoincrement())
   name               String
   tenantId           String           @db.Uuid
   email              String
   imageUrl           String?
   users              AuthUser[]
   certificateRequests CertificateRequests[]
+  companyMappings    UserCompanyMapping[]
 }
 
 model UserCompanyMapping {
-  id       String  @id @default(uuid()) @db.Uuid
-  userId   String  @db.Uuid
-  tenantId String  @db.Uuid
+  id       Int                        @id @default(autoincrement())
+  userId   Int  
   user     AuthUser @relation(fields: [userId], references: [id])
+  company  Company  @relation(fields: [companyId], references: [id]) // Add this line
+  companyId Int 
 }
 
 model Role {
-  id    String     @id @default(uuid()) @db.Uuid
+  id               Int                        @id @default(autoincrement())
   name  String
   users AuthUser[]
 }
@@ -66,7 +69,7 @@ model CertificateRequests {
   comments           CertificateRequestComments[]
   verifierMappings   VerifierCertificateMapping[]
   company            Company               @relation(fields: [companyId], references: [id])
-  companyId          String                @db.Uuid
+  companyId          Int               
 }
 
 model CertificateRequestComments {
@@ -108,7 +111,7 @@ model SampleProof {
 
 model VerifierCertificateMapping {
   id                  Int                @id @default(autoincrement())
-  verifierId          String             @db.Uuid
+  verifierId          Int            
   certificateRequestId Int
   certificateRequest  CertificateRequests @relation(fields: [certificateRequestId], references: [id])
   verifier           AuthUser            @relation(fields: [verifierId], references: [id])

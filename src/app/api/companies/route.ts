@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import {prisma} from "@/lib/prisma"; 
-import { Company, CompanyResult } from "@/types/certificate";
+import { prisma } from "@/lib/prisma";
+import { CompanyRequestCountDto } from "@/types/certificate";
 
 export async function GET(request: Request) {
     try {
@@ -11,66 +11,32 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Email is required' }, { status: 400 });
         }
 
-        // Get user info and role
-        const userInfo = await prisma.authUser.findFirst({
-            where: {
-                email: {
-                    equals: email,
-                    mode: 'insensitive'
-                }
-            },
-            include: {
-                roles: true
-                    
-                }
-            }
-        );
-
-        if (!userInfo?.roles?.[0].name) {
-            return NextResponse.json([]);
-        }
-
+        // Fetch companies with their certificate requests
         const companies = await prisma.company.findMany({
             include: {
                 certificateRequests: true
             }
         });
 
-        const result = companies.map((company:Company)=> ({
+        // Transform the data to match the DTO structure
+        const result: CompanyRequestCountDto[] = companies.map(company => ({
             name: company.name,
             companyId: company.tenantId,
-            imageUrl: company.imageUrl?? '',
+            imageUrl: company.imageUrl ?? '',
             onGoing: company.certificateRequests.filter(
-                r => r.tenantId === company.tenantId && r.status !== 'COMPLETED'
+                request => request.tenantId === company.tenantId && 
+                request.status !== 'Completed'  // Using the Status enum from your schema
             ).length,
             completed: company.certificateRequests.filter(
-                r => r.tenantId === company.tenantId && r.status === 'COMPLETED'
+                request => request.tenantId === company.tenantId && 
+                request.status === 'Completed'  // Using the Status enum from your schema
             ).length
         }));
 
-        // If admin, return all companies
-        if (userInfo.roles[0].name === 'ADMIN') {
-            return NextResponse.json(result);
-        }
-
-        // Get user's company mappings
-        const userCompanyIds = await prisma.userCompanyMapping.findMany({
-            where: {
-                userId: userInfo.id
-            },
-            select: {
-                tenantId: true
-            }
-        });
-
-        const filteredResult = result.filter((company: CompanyResult) => 
-            userCompanyIds.some((mapping: { tenantId: string }) => mapping.tenantId === company.companyId)
-        );
-
-        return NextResponse.json(filteredResult);
+        return NextResponse.json(result);
 
     } catch (error) {
-        console.error('Error fetching companies:', error);
+        console.error('Error fetching company request counts:', error);
         return NextResponse.json(
             { error: 'Internal Server Error' },
             { status: 500 }
