@@ -4,12 +4,6 @@ import '../../styles/globals.css';
 
 import { PROFILE_TITLE, COMPANY_OVERVIEW_TITLE, COMPANY_LABEL, EMAIL_LABEL, UPDATE_BUTTON_TEXT } from '../../constants/strings';
 
-"use client";
-
-import '../../styles/globals.css';
-
-import { PROFILE_TITLE, COMPANY_OVERVIEW_TITLE, COMPANY_LABEL, EMAIL_LABEL, UPDATE_BUTTON_TEXT } from '../../constants/strings';
-
 export default function SettingsPage() {
   return (
     <div>
