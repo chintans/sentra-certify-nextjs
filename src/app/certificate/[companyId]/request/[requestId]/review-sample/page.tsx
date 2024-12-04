@@ -1,11 +1,10 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../.../../../../../../../styles/globals.css';
-
+import Tooltip from 'rc-tooltip';
 import '../../../../../../styles/globals.css';
 import {
   PROOFS_TITLE,
-  PROOF_ITEMS,
   NEW_REQUEST_TITLE,
   DOC_NAME_LABEL,
   ASSET_LEVEL_LABEL,
@@ -17,53 +16,57 @@ import {
   LOG_LABEL,
   AUDITOR_LOG_TITLE
 } from '../../../../../../constants/strings';
+import { getSampleProofs, getSamplesByCertificateId } from '../../../../../../services/sampleService'; // Adjust the import path
+import { useParams } from 'next/navigation';
+import { ProofCategory, SampleDto, SampleProofDto } from '../../../../../../types/sample';
+
+
 
 export default function ReviewSample() {
-  // Use for actual data
-  // const { companyId, requestId } = useParams();
+  const params = useParams();
   const [showProofDialog, setShowProofDialog] = useState(false);
   const [showLogDialog, setShowLogDialog] = useState(false);
   const [activeLogTab, setActiveLogTab] = useState('Activity Data');
+  const [samples, setSamples] = useState<SampleDto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [proofs, setProofs] = useState<SampleProofDto[]>([]);
 
-  const data = [
-    {
-      docName: '2c_MB51',
-      assetLevel: 'plant',
-      scopeLevel: 'Scope 1',
-      frequency: 'Daily',
-      timeline: 'Apr, 2022',
-      activityData: '18012887',
-      proof: true,
-      log: true,
-      description: 'Upload a photo to personalize your profile.'
-    },
-    {
-      docName: '2d_ZRMS_PRD',
-      assetLevel: 'site',
-      scopeLevel: 'Scope 1',
-      frequency: 'Heat',
-      timeline: 'Apr, 2022',
-      activityData: '203781',
-      emissionFactor: '2789',
-      proof: true,
-      log: true,
-      description: 'View detailed analytics for this data point.'
-    },
-    {
-      docName: '3d_Company Owned Vehicle_23-24',
-      assetLevel: 'Plant',
-      scopeLevel: 'Scope 1',
-      frequency: 'Heat',
-      timeline: 'Apr, 2022',
-      activityData: '188185',
-      proof: true,
-      log: true,
-      description: 'Enable or disable this feature with a single click.'
-    },
-  ];
+  useEffect(() => {
+    const fetchSamples = async () => {
+      try {
+        setIsLoading(true);
+        const requestId = params.requestId;
+        if (!requestId) {
+          throw new Error('Request ID not found in URL');
+        }
+        
+        const data = await getSamplesByCertificateId(Number(requestId));
+        setSamples(data);
+      } catch (error) {
+        console.error('Error fetching samples:', error);
+        setError('Failed to fetch samples data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleProofClick = () => {
-    setShowProofDialog(true);
+    fetchSamples();
+  }, [params.companyId, params.requestId]);
+
+  const handleProofClick = async (id: string) => {
+    try {
+      setIsLoading(true);
+      const response = await getSampleProofs(id, ProofCategory.ActivityData);
+      // Extract the data array from the response
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",response);
+      setProofs(response.data || []); // Add null check with default empty array
+      setShowProofDialog(true);
+    } catch (error) {
+      console.error('Error fetching proofs:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogClick = () => {
@@ -186,36 +189,52 @@ export default function ReviewSample() {
     <div className="p-8">
       <h1 className="text-white mb-8">{NEW_REQUEST_TITLE}</h1>
       <div className="bg-[#1c1c24] p-6 rounded-lg">
-        {data.map((item, index) => (
-          <div key={index} className="mb-4 border border-gray-700 rounded-lg p-4">
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-white opacity-8 f-14">{DOC_NAME_LABEL}
-                <span className="ml-10 f-color cursor-pointer">{item.docName}</span>
-                {/* Todo: Implement in future */}
-                {/* <Tooltip placement="top" overlay={`${item.description}`} overlayStyle={{ backgroundColor: '#35363f', color: '#fff', padding: '5px 10px', borderRadius: '4px' }}>
-                  <span className="text-gray-400 ml-10 cursor-pointer">&#9432;</span>
-                </Tooltip> */}
-              </h2>
-            </div>
-            <div className="flex justify-between text-white f-14 opacity-8">
-              <p>{ASSET_LEVEL_LABEL} <span className="result-span f-color">{item.assetLevel}</span></p>
-              <p>{SCOPE_LEVEL_LABEL} <span className="result-span f-color">{item.scopeLevel}</span></p>
-              <p>{FREQUENCY_LABEL} <span className="result-span f-color">{item.frequency}</span></p>
-              <p>{TIMELINE_LABEL} <span className="result-span f-color">{item.timeline}</span></p>
-              <p>{ACTIVITY_DATA_LABEL} <span className="result-span f-color">{item.activityData}</span></p>
-              <div onClick={handleProofClick} className="cursor-pointer">{PROOF_LABEL}:
-                <span className="result-span f-color">
-                  {item.proof ? '📎' : 'N/A'}
-                </span>
+        {isLoading ? (
+          <div className="text-white text-center py-4">Loading...</div>
+        ) : error ? (
+          <div className="text-red-500 text-center py-4">{error}</div>
+        ) : samples.length === 0 ? (
+          <div className="text-white text-center py-4">No samples found</div>
+        ) : (
+          samples.map((item, index) => (
+            <div key={index} className="mb-4 border border-gray-700 rounded-lg p-4">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-white opacity-8 f-14">{DOC_NAME_LABEL}
+                  <span className="ml-10 f-color cursor-pointer">{item.docName}</span>
+                  <Tooltip 
+                    placement="top" 
+                    overlay={`${item.description}`} 
+                    overlayStyle={{ 
+                      backgroundColor: '#35363f', 
+                      color: '#fff', 
+                      padding: '5px 10px', 
+                      borderRadius: '4px' 
+                    }}
+                  >
+                    <span className="text-gray-400 ml-10 cursor-pointer">&#9432;</span>
+                  </Tooltip>
+                </h2>
               </div>
-              <div onClick={handleLogClick} className="cursor-pointer">{LOG_LABEL}:
-                <span className="result-span f-color">
-                  {item.log ? '📄' : 'N/A'}
-                </span>
+              <div className="flex justify-between text-white f-14 opacity-8">
+                <p>{ASSET_LEVEL_LABEL} <span className="result-span f-color">{item.assetLevel}</span></p>
+                <p>{SCOPE_LEVEL_LABEL} <span className="result-span f-color">{item.scopeLevel}</span></p>
+                <p>{FREQUENCY_LABEL} <span className="result-span f-color">{item.frequency}</span></p>
+                <p>{TIMELINE_LABEL} <span className="result-span f-color">{new Date(item.toDate).toLocaleDateString()}</span></p>
+                <p>{ACTIVITY_DATA_LABEL} <span className="result-span f-color">{item.activityData}</span></p>
+                <div onClick={() => handleProofClick(item.id)} className="cursor-pointer">{PROOF_LABEL}:
+                  <span className="result-span f-color">
+                  📎
+                  </span>
+                </div>
+                <div onClick={handleLogClick} className="cursor-pointer">{LOG_LABEL}:
+                  <span className="result-span f-color">
+                  📄
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {showProofDialog && (
@@ -226,8 +245,8 @@ export default function ReviewSample() {
               <button onClick={handleCloseDialog} className="text-white">✖</button>
             </div>
             <ul className="text-white space-y-2">
-              {PROOF_ITEMS.map((item, index) => (
-                <li key={index} className="border border-gray-700 p-2 rounded">{item}</li>
+              {proofs?.map((item, index) => (
+                <li key={index} className="border border-gray-700 p-2 rounded"><a href={item.sampleProofLink} target="_blank">{item.sampleProofName}</a></li>
               ))}
             </ul>
           </div>
@@ -261,3 +280,8 @@ export default function ReviewSample() {
     </div>
   );
 }
+
+
+
+
+

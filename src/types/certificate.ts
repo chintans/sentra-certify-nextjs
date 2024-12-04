@@ -18,7 +18,7 @@ export interface RequestDto {
   }
   
   export interface OngoingRequestDto {
-    id: string;
+    id: number;
     certificateName: string;
     requestDate: Date;
     completionDate: Date;
