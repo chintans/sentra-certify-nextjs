@@ -2,10 +2,6 @@
 import '../../styles/globals.css';
 import { USERS_TITLE, USER_ROLES_TITLE, NAME_HEADER, EMAIL_HEADER, ROLE_HEADER, ACTION_HEADER } from '../../constants/strings';
 
-"use client";
-import '../../styles/globals.css';
-import { USERS_TITLE, USER_ROLES_TITLE, NAME_HEADER, EMAIL_HEADER, ROLE_HEADER, ACTION_HEADER } from '../../constants/strings';
-
 export default function UserRolesPage() {
   const users = [
     { name: 'Karnik Patel', email: 'karnik@gmail.com', role: 'Member' },
