@@ -141,65 +141,104 @@ export default function CompanyRequest() {
       </div>
 
       {activeTab === NEW_REQUEST_TAB && (
-        <div className="bg-[#1c1c24] p-6 rounded-lg">
-          <table className="w-full text-left request-table">
-            <thead className="border border-gray-700 border-radius-8 overflow-hidden">
-              <tr>
-                <th className="text-gray-400 table-header">Certificate Name</th>
-                <th className="text-gray-400 table-header">{REQUEST_DATE_HEADER}</th>
-                <th className="text-gray-400 table-header">{COMPLETION_DATE_HEADER}</th>
-                <th className="text-gray-400 table-header">{STATUS_HEADER}</th>
-                <th className="text-gray-400 table-header">{ACTION_HEADER}</th>
-              </tr>
-            </thead>
-            <tbody className="border border-gray-700 border-radius-8 overflow-hidden">
-              {newRequests.map((request, index) => (
-                <tr key={index} className="border-t border-gray-700">
-                  <td className="py-2 text-gray-400 text-white table-cell">{request.certificateType}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">{new Date(request.requestDate).toLocaleDateString()}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">{new Date(request.completionDate).toLocaleDateString()}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">
-                    <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
-                  </td>
-                  <td className="py-2">
-                    <button className="px-4 py-2 bg-green-500 text-white rounded btn-success" onClick={(e) => { e.stopPropagation(); handleAssignClick(); }}>{ACCEPT_ASSIGN_BUTTON_TEXT}</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className='new-request-list'>
+        <div className="table-head flex justify-between bg-grey-1 p-2 rounded border">
+          <div className="table-col">
+            <div className="text-left">Certificate Name</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">{REQUEST_DATE_HEADER}</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">{COMPLETION_DATE_HEADER}</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">{STATUS_HEADER}</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left"></div>
+          </div>
         </div>
+        <div className="table-body mt-3 bg-grey-2 rounded border ">
+              {newRequests.map((request, index) => (
+                <div key={index} className="table-row flex justify-between">
+                  <div className="table-cell">
+                    <div className="text-left">{request.certificateType}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className={`status ${getStatusClass(request.status)}`}>
+                      {request.status}
+                    </div>
+                  </div>
+                  <div className="table-cell">
+                    <button 
+                      className="btn btn-success"
+                      onClick={(e) => { e.stopPropagation(); handleAssignClick(); }}
+                    >
+                      {ACCEPT_ASSIGN_BUTTON_TEXT}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
       )}
 
       {activeTab === ASSIGNED_REQUEST_TAB && (
-        <div className="bg-[#1c1c24] p-6 rounded-lg">
-          <table className="w-full text-left request-table">
-            <thead className="border border-gray-700 border-radius-8 overflow-hidden table-body">
-              <tr>
-                <th className="text-gray-400 table-header">Certificate Name</th>
-                <th className="text-gray-400 table-header">{REQUEST_DATE_HEADER}</th>
-                <th className="text-gray-400 table-header">{COMPLETION_DATE_HEADER}</th>
-                <th className="text-gray-400 table-header">{STATUS_HEADER}</th>
-                <th className="text-gray-400 table-header">Members</th>
-                <th className="text-gray-400 table-header">Tech Reviewer</th>
-              </tr>
-            </thead>
-            <tbody className="border border-gray-700 border-radius-8 overflow-hidden table-body">
-              {ongoingRequests.map((request, index) => (
-                <tr key={index} className="border-t border-gray-700 cursor-pointer" onClick={() => handleRowClick(request.id)}>
-                  <td className="py-2 text-gray-400 text-white table-cell">{request.certificateName}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">{new Date(request.requestDate).toLocaleDateString()}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">{new Date(request.completionDate).toLocaleDateString()}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">
-                    <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
-                  </td>
-                  <td className="py-2 text-gray-400 text-white table-cell">{request.members}</td>
-                  <td className="py-2 text-gray-400 text-white table-cell">{request.technicalReviewer}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="ongoing-request-list">
+        <div className="table-head flex justify-between bg-grey-1 p-2 rounded border">
+          <div className="table-col">
+            <div className="text-left">Certificate Name</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">{REQUEST_DATE_HEADER}</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">{COMPLETION_DATE_HEADER}</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">{STATUS_HEADER}</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">Members</div>
+          </div>
+          <div className="table-col">
+            <div className="text-left">Tech Reviewer</div>
+          </div>
         </div>
+        <div className="table-body mt-3 bg-grey-2 rounded border">
+              {ongoingRequests.map((request, index) => (
+                <div key={index} className="table-row flex justify-between cursor-pointer" onClick={() => handleRowClick(request.id)}>
+                  <div className="table-cell">
+                    <div className="text-left">{request.certificateName}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className={`status ${getStatusClass(request.status)}`}>
+                      {request.status}
+                    </div>
+                  </div>
+                  <div className="table-cell">
+                    <div className="text-left">{request.members}</div>
+                  </div>
+                  <div className="table-cell">
+                    <div className="text-left">{request.technicalReviewer}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
       )}
 
       {isDialogOpen && (

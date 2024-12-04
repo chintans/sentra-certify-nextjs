@@ -73,8 +73,11 @@ export default function TakeAction() {
   }
 
   return (
+    <div>
+       <div className="flex justify-between items-center page-header">
+       <h1 className="text-white mb-8">New Request</h1>
+      </div>
     <div className="p-8">
-      <h1 className="text-white mb-8">New Request</h1>
       <div className="bg-[#1c1c24] p-6 rounded-lg">
         <table className="w-full text-left mb-4">
           <thead className="border border-gray-700 border-radius-8 overflow-hidden">
@@ -121,6 +124,7 @@ export default function TakeAction() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }

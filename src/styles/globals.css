@@ -206,5 +206,66 @@ body {
     .table-head .text-left{
       opacity: 1;
     }
+}
+.review-request{
+  .table-col, .table-cell {
+    flex: 1;
+    padding: 0 2rem;
+    }
+    .table-head .text-left{
+      opacity: 1;
+    }  
+}
+m-4{
+      margin: 4rem;
+}
 
+.modal-body {
+  padding: 1rem;
+  color: #f0f3f5;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #35363f;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.text-white {
+  color: #f0f3f5;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.text-white:hover {
+  opacity: 0.8;
+}
+
+.font-icon {
+  font-size: 1.25rem;
+}
+
+.proof-dialog{  
+  width: 35rem;
+  background-color: #212631;
+  span {
+    text-decoration: underline;
+  }
+}
+.proof-header{
+  padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-right: 2rem;
+}
+.w-15{
+  width: 15rem;
+}
+
+.w-14{
+  width: 14rem;
 }

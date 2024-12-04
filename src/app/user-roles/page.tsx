@@ -13,7 +13,7 @@ export default function UserRolesPage() {
       <div className="flex justify-between items-center page-header">
         <h1 >{USERS_TITLE}</h1>
       </div>
-      <div className='p-7'>
+      <div className='p-8'>
         <div className="flex justify-between items-center mb-3">
           <h2 className="title">{USER_ROLES_TITLE}</h2>
           <button className="px-2 py-1 btn-success bg-[#0fc18c] border border-[#0fc18c] text-white rounded">Add User</button>
