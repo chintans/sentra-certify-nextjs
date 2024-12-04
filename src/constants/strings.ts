@@ -23,7 +23,7 @@ export const REQUEST_STATUS_DELAYED="Delayed";
 export const REQUEST_STATUS_ASSIGNED="Assigned";
 
 export const NEW_REQUEST_TAB = "New Request";
-export const ASSIGNED_REQUEST_TAB = "Assigned Requests";
+export const ASSIGNED_REQUEST_TAB = "Ongoing Requests";
 export const REQUEST_DATE_HEADER = "Request Date";
 export const COMPLETION_DATE_HEADER = "Completion Date";
 export const STATUS_HEADER = "Status";

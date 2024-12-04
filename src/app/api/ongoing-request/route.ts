@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     }
 
     const response: OngoingRequestDto = {
-      id: certificateRequest.id.toString(),
+      id: certificateRequest.id,
       certificateName: certificateRequest.certificateType.name,
       requestDate: certificateRequest.requestDate,
       completionDate: certificateRequest.dueDate,

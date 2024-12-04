@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     });
 
     const response: OngoingRequestDto[] = certificateRequests.map(request => ({
-      id: request.id.toString(),
+      id: request.id,
       certificateName: request.certificateType.name,
       requestDate: request.requestDate,
       completionDate: request.dueDate,

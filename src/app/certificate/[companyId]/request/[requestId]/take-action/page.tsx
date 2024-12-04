@@ -1,6 +1,9 @@
 "use client";
 import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import '../../../../../../styles/globals.css';
+import { getOngoingRequestById } from '../../../../../../services/certificateService';
+import { OngoingRequestDto } from '../../../../../../types/certificate';
 import { 
   INPROGRESSTEXT,
   NOTSTARTEDTEXT,
@@ -16,19 +19,27 @@ import {
   REQUEST_STATUS_ASSIGNED,
 } from '../../../../../../constants/strings';
 
+
 export default function TakeAction() {
   const router = useRouter();
   const { companyId, requestId } = useParams();
+  const [request, setRequest] = useState<OngoingRequestDto | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const request = {
-    certificateName: 'GHG',
-    requestDate: '2024-08-22',
-    completionDate: '2024-08-31',
-    status: 'Assigned',
-    members: 'N/A',
-    techReviewer: 'N/A',
-    comments: 'No Comments',
-  };
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const data = await getOngoingRequestById(Number(requestId));
+        setRequest(data);
+      } catch (error) {
+        console.error('Error fetching request:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequest();
+  }, [requestId]);
 
   function getStatusClass(status: string): string {
     switch (status) {
@@ -57,6 +68,10 @@ export default function TakeAction() {
     router.push(`/certificate/${companyId}/request/${requestId}/review-sample`);
   };
 
+  if (loading || !request) {
+    return <div className="p-8 text-white">Loading...</div>;
+  }
+
   return (
     <div className="p-8">
       <h1 className="text-white mb-8">New Request</h1>
@@ -72,26 +87,38 @@ export default function TakeAction() {
               <th className="text-gray-400 table-header">Tech Reviewer</th>
             </tr>
           </thead>
-          <tbody className="border border-gray-700 border-radius-8 overflow-hidden ">
+          <tbody className="border border-gray-700 border-radius-8 overflow-hidden">
             <tr className="border-t border-gray-700">
               <td className="py-2 text-white table-cell">{request.certificateName}</td>
-              <td className="py-2 text-white table-cell">{request.requestDate}</td>
-              <td className="py-2 text-white table-cell">{request.completionDate}</td>
+              <td className="py-2 text-white table-cell">{new Date(request.requestDate).toLocaleDateString()}</td>
+              <td className="py-2 text-white table-cell">{new Date(request.completionDate).toLocaleDateString()}</td>
               <td className="py-2 text-white table-cell">
                 <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
               </td>
               <td className="py-2 text-white table-cell">{request.members}</td>
-              <td className="py-2 text-white table-cell">{request.techReviewer}</td>
+              <td className="py-2 text-white table-cell">{request.technicalReviewer}</td>
             </tr>
           </tbody>
         </table>
         <div className="flex space-x-4 mb-4">
-          <button className="px-2 py-1 btn-success text-white rounded" onClick={handleGenerateSampleClick}>Generate Sample</button>
-          <button className="px-2 py-1 btn-success text-white rounded" onClick={handleReviewSampleClick}>Review Sample</button>
+          <button 
+            className="px-2 py-1 btn-success text-white rounded" 
+            onClick={handleGenerateSampleClick}
+          >
+            Generate Sample
+          </button>
+          <button 
+            className="px-2 py-1 btn-success text-white rounded" 
+            onClick={handleReviewSampleClick}
+          >
+            Review Sample
+          </button>
         </div>
         <div>
           <h2 className="text-white mb-2">Comments</h2>
-          <p className="text-white f-14 p-2 mt-3">{request.comments}</p>
+          {request.comments.map((comment, index) => (
+            <p key={index} className="text-white f-14 p-2 mt-3">{comment.comment}</p>
+          ))}
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { ProofCategory, SampleDto, SampleProofDto } from '@/types/sample';
+import axios, { AxiosResponse } from 'axios';
+import { ProofCategory, SampleDto } from '@/types/sample';
 
 export async function getSamplesByCertificateId(
     certificateId: string | number
@@ -13,7 +13,7 @@ export async function getSamplesByCertificateId(
 export async function getSampleProofs(
   sampleId: string | number,
   proofCategory: ProofCategory
-): Promise<SampleProofDto[]> {
+): Promise<AxiosResponse> {
   const { data } = await axios.get('/api/sample-proofs', {
       params: { 
           sampleId,
