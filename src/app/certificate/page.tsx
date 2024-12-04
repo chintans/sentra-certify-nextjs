@@ -15,7 +15,7 @@ export default function Certificate() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const data = await getCompaniesByEmail('yojit@gmail.com');
+        const data = await getCompaniesByEmail('tester@gmail.com');
         setCompanies(data);
       } catch (error) {
         console.error('Error fetching companies:', error);

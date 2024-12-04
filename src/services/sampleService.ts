@@ -1,32 +1,24 @@
 import axios from 'axios';
-import {
-  CertificateRequestListDto,
-  OngoingRequestDto,
-} from "@/types/certificate";
+import { ProofCategory, SampleDto, SampleProofDto } from '@/types/sample';
 
-export async function getCertificateRequests(
-  companyId: string
-): Promise<CertificateRequestListDto> {
-  const { data } = await axios.get(`/api/certificate-requests-by-company`, {
-    params: { companyId }
-  });
-  return data;
+export async function getSamplesByCertificateId(
+    certificateId: string | number
+): Promise<SampleDto[]> {
+    const { data } = await axios.get('/api/sample-data', {
+        params: { certificateId }
+    });
+    return data;
 }
 
-export async function getOngoingRequests(
-  companyId: string
-): Promise<OngoingRequestDto[]> {
-  const { data } = await axios.get(`/api/certificate-ongoing`, {
-    params: { companyId }
-  });
-  return data;
-}
-
-export async function getOngoingRequestById(
-  requestId: string
-): Promise<OngoingRequestDto> {
-  const { data } = await axios.get(`/api/ongoing-request`, {
-    params: { requestId }
+export async function getSampleProofs(
+  sampleId: string | number,
+  proofCategory: ProofCategory
+): Promise<SampleProofDto[]> {
+  const { data } = await axios.get('/api/sample-proofs', {
+      params: { 
+          sampleId,
+          proofCategory 
+      }
   });
   return data;
 }

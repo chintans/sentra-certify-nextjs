@@ -11,25 +11,49 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Email is required' }, { status: 400 });
         }
 
-        // Fetch companies with their certificate requests
-        const companies = await prisma.company.findMany({
-            include: {
-                certificateRequests: true
-            }
+        // 1. Find user and their role
+        const user = await prisma.authUser.findFirst({
+            where: { email },
+            include: { role: true }
         });
 
-        // Transform the data to match the DTO structure
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        let companies;
+        
+        // 2 & 3. Check role and fetch appropriate companies
+        if (user.role.name === 'ADMIN') {
+            // For admin, fetch all companies
+            companies = await prisma.company.findMany({
+                include: { certificateRequests: true }
+            });
+        } else {
+            // For non-admin, fetch only mapped companies
+            companies = await prisma.company.findMany({
+                where: {
+                    companyMappings: {
+                        some: {
+                            userId: user.id
+                        }
+                    }
+                },
+                include: { certificateRequests: true }
+            });
+        }
+
         const result: CompanyRequestCountDto[] = companies.map(company => ({
             name: company.name,
             companyId: company.tenantId,
             imageUrl: company.imageUrl ?? '',
             onGoing: company.certificateRequests.filter(
                 request => request.tenantId === company.tenantId && 
-                request.status !== 'Completed'  // Using the Status enum from your schema
+                request.status !== "Completed"
             ).length,
             completed: company.certificateRequests.filter(
                 request => request.tenantId === company.tenantId && 
-                request.status === 'Completed'  // Using the Status enum from your schema
+                request.status === "Completed"
             ).length
         }));
 

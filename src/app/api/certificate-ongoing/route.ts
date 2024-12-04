@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const certificateRequests = await prisma.certificateRequests.findMany({
       where: {
         AND: [
-          { tenantId: companyId },
+          { companyId: Number(companyId) },
           { status: { not: 'NotStarted' } }
         ]
       },
