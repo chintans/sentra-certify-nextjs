@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const [requests, company] = await Promise.all([
       prisma.certificateRequests.findMany({
         where: {
-          tenantId: companyId
+          companyId: Number(companyId)
         },
         include: {
           certificateType: true
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       }),
       prisma.company.findFirst({
         where: {
-          tenantId: companyId
+          id: Number(companyId)
         }
       })
     ]);

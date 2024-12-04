@@ -4,9 +4,10 @@ import {
   CompanyResult,
   OngoingRequestDto,
 } from "@/types/certificate";
+import { UserDto } from '@/types/user';
 
 export async function getCertificateRequests(
-  companyId: string
+  companyId: number
 ): Promise<CertificateRequestListDto> {
   const { data } = await axios.get(`/api/certificate-requests-by-company`, {
     params: { companyId }
@@ -15,7 +16,7 @@ export async function getCertificateRequests(
 }
 
 export async function getOngoingRequests(
-  companyId: string
+  companyId: number
 ): Promise<OngoingRequestDto[]> {
   const { data } = await axios.get(`/api/certificate-ongoing`, {
     params: { companyId }
@@ -24,7 +25,7 @@ export async function getOngoingRequests(
 }
 
 export async function getOngoingRequestById(
-  requestId: string
+  requestId: number
 ): Promise<OngoingRequestDto> {
   const { data } = await axios.get(`/api/ongoing-request`, {
     params: { requestId }
@@ -39,5 +40,10 @@ export async function getCompaniesByEmail(
   const { data } = await axios.get(`/api/companies`, {
     params: { email }
   });
+  return data;
+}
+
+export async function getUsers(): Promise<UserDto[]> {
+  const { data } = await axios.get('/api/users');
   return data;
 }

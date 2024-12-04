@@ -13,7 +13,7 @@ import {
 export default function RequestPage() {
   const router = useRouter();
   const params = useParams();
-  const companyId = params.companyId as string;
+  const companyId = Number(params.companyId);
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('New Request');
