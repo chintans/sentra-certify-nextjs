@@ -15,13 +15,13 @@ const Sidebar: FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#17181d] text-white w-64 p-4">
+    <div className="flex flex-col h-screen bg-[#17181d] text-white w-15 p-4">
       {/* Logo */}
-      <div className="mb-8 pl-4">
+      <div className="mb-8">
         <Image src="https://sentracommonwebapp.blob.core.windows.net/files/Sentracertify.svg" width={180} height={60} alt="Logo" className="sidebar-brand-full" />
       </div>
       {/* Menu Items */}
-      <nav className="flex-1 f-14">
+      <nav className="flex-1 f-14 w-14">
         <Link href="/certificate" 
           className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-2 opacity-8 hover:text-white opacity-1  ${pathname === '/certificate' ? 'bg-[#35363f] text-white' : 'text-gray-300 hover:bg-[#2a2a36]'}`} 
         >

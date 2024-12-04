@@ -1,7 +1,5 @@
 "use client";
-
 import '../../styles/globals.css';
-
 import { PROFILE_TITLE, COMPANY_OVERVIEW_TITLE, COMPANY_LABEL, EMAIL_LABEL, UPDATE_BUTTON_TEXT } from '../../constants/strings';
 
 export default function SettingsPage() {
@@ -22,12 +20,7 @@ export default function SettingsPage() {
           <div className="flex items-center gap-6">
             <label className="block f-14">{EMAIL_LABEL}</label>
             <input type="email" className="w-2/3 p-2 bg-gray-800 text-white rounded" />
-          <div className="flex items-center gap-6">
-            <label className="block f-14">{EMAIL_LABEL}</label>
-            <input type="email" className="w-2/3 p-2 bg-gray-800 text-white rounded" />
-          </div>
         </div>
-        <button className="px-2 py-1 bg-[#0fc18c] btn-success border border-[#0fc18c] text-white rounded">{UPDATE_BUTTON_TEXT}</button>
       </div> 
         <button className="px-2 py-1 bg-[#0fc18c] btn-success border border-[#0fc18c] text-white rounded">{UPDATE_BUTTON_TEXT}</button>
       </div> 

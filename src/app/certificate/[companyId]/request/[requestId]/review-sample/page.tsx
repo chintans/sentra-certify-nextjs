@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import '../.../../../../../../../styles/globals.css';
-import Tooltip from 'rc-tooltip';
 import '../../../../../../styles/globals.css';
 import {
   PROOFS_TITLE,
@@ -19,7 +17,6 @@ import {
 import { getSampleProofs, getSamplesByCertificateId } from '../../../../../../services/sampleService'; // Adjust the import path
 import { useParams } from 'next/navigation';
 import { ProofCategory, SampleDto, SampleProofDto } from '../../../../../../types/sample';
-
 
 
 export default function ReviewSample() {
@@ -201,7 +198,8 @@ export default function ReviewSample() {
               <div className="flex justify-between items-center mb-2">
                 <h2 className="text-white opacity-8 f-14">{DOC_NAME_LABEL}
                   <span className="ml-10 f-color cursor-pointer">{item.docName}</span>
-                  <Tooltip 
+                    {/* Todo: Implement in future */}
+                  {/* <Tooltip 
                     placement="top" 
                     overlay={`${item.description}`} 
                     overlayStyle={{ 
@@ -212,7 +210,7 @@ export default function ReviewSample() {
                     }}
                   >
                     <span className="text-gray-400 ml-10 cursor-pointer">&#9432;</span>
-                  </Tooltip>
+                  </Tooltip> */}
                 </h2>
               </div>
               <div className="flex justify-between text-white f-14 opacity-8">
@@ -239,16 +237,27 @@ export default function ReviewSample() {
 
       {showProofDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" onClick={handleCloseDialog}>
-          <div className="bg-[#1c1c24] p-6 rounded-lg w-96" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4">
+          <div className="bg-[#1c1c24] rounded-lg proof-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4 proof-header border-bottom">
               <h2 className="text-xl font-semibold text-white">{PROOFS_TITLE}</h2>
               <button onClick={handleCloseDialog} className="text-white">✖</button>
             </div>
-            <ul className="text-white space-y-2">
-              {proofs?.map((item, index) => (
-                <li key={index} className="border border-gray-700 p-2 rounded"><a href={item.sampleProofLink} target="_blank">{item.sampleProofName}</a></li>
+            <div className="modal-body p-6 ">
+            {proofs?.map((item, index) => (
+                <div key={index} className="py-3 border-bottom">
+                  <a
+                    href={item.sampleProofLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white"
+                  >
+                    <span>
+                      {item.sampleProofName}
+                    </span>
+                  </a>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       )}
@@ -280,8 +289,3 @@ export default function ReviewSample() {
     </div>
   );
 }
-
-
-
-
-
