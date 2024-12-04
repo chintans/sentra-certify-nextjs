@@ -2,8 +2,6 @@
 import { useState } from 'react';
 import '../.../../../../../../../styles/globals.css';
 
-import Tooltip from 'rc-tooltip';
-import 'rc-tooltip/assets/bootstrap.css';
 import '../../../../../../styles/globals.css';
 import {
   PROOFS_TITLE,
@@ -193,9 +191,10 @@ export default function ReviewSample() {
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-white opacity-8 f-14">{DOC_NAME_LABEL}
                 <span className="ml-10 f-color cursor-pointer">{item.docName}</span>
-                <Tooltip placement="top" overlay={`${item.description}`} overlayStyle={{ backgroundColor: '#35363f', color: '#fff', padding: '5px 10px', borderRadius: '4px' }}>
+                {/* Todo: Implement in future */}
+                {/* <Tooltip placement="top" overlay={`${item.description}`} overlayStyle={{ backgroundColor: '#35363f', color: '#fff', padding: '5px 10px', borderRadius: '4px' }}>
                   <span className="text-gray-400 ml-10 cursor-pointer">&#9432;</span>
-                </Tooltip>
+                </Tooltip> */}
               </h2>
             </div>
             <div className="flex justify-between text-white f-14 opacity-8">

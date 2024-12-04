@@ -21,14 +21,12 @@ export const REQUEST_STATUS_COMPLETED="Completed";
 export const REQUEST_STATUS_ACTIONREQUIRED="Action Required";
 export const REQUEST_STATUS_DELAYED="Delayed";
 export const REQUEST_STATUS_ASSIGNED="Assigned";
-export const REQUEST_TITLE = "Requests";
 
 export const NEW_REQUEST_TAB = "New Request";
 export const ASSIGNED_REQUEST_TAB = "Assigned Requests";
 export const REQUEST_DATE_HEADER = "Request Date";
 export const COMPLETION_DATE_HEADER = "Completion Date";
 export const STATUS_HEADER = "Status";
-export const ACTION_HEADER_REQUEST = "Action";
 export const INPROGRESSTEXT = 'in-progress';
 export const NOTSTARTEDTEXT = 'not-started';
 export const COMPLETEDTEXT = 'completed';
