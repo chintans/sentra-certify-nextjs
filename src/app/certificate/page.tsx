@@ -28,7 +28,7 @@ export default function Certificate() {
   }, []);
 
   const handleCompanyClick = (companyId: string) => {
-    router.push(`/request?company=${companyId}`);
+    router.push(`/request/${companyId}`);
   };
 
   if (loading) {

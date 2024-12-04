@@ -2,8 +2,8 @@ export interface RequestDto {
     id: number;
     certificateType: string;
     customerName: string;
-    requestDate: Date;
-    completionDate: Date;
+    requestDate: string;
+    completionDate: string;
     status: string;
     stage: string;
   }
@@ -53,7 +53,7 @@ export interface RequestDto {
 
   export interface CompanyRequestCountDto {
     name: string;
-    companyId: string;
+    companyId: number;
     imageUrl: string | null;
     onGoing: number;
     completed: number;

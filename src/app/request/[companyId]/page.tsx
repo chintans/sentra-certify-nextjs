@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { CertificateRequestListDto, OngoingRequestDto } from '@/types/certificate';
 import { 
   getCertificateRequests, 
@@ -12,9 +12,9 @@ import {
 
 export default function RequestPage() {
   const router = useRouter();
-  const params = useParams();
-  const companyId = Number(params.companyId);
-  
+  const params = usePathname();
+  const companyId = Number(params.split('/')[2]);
+  console.log(companyId);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('New Request');
   const [newRequests, setNewRequests] = useState<CertificateRequestListDto>({ requests: [] });
@@ -51,7 +51,7 @@ export default function RequestPage() {
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/request/${id}`);
+    router.push(`/request/${companyId}/${id}`);
   };
 
   const handleTabClick = (tab: string) => {
@@ -96,8 +96,8 @@ export default function RequestPage() {
                   {newRequests.requests.map((request, index) => (
                     <tr key={index} className="border-t border-gray-700">
                       <td className="py-2 text-white">{request.certificateType}</td>
-                      <td className="py-2 text-white">{request.requestDate.toLocaleDateString()}</td>
-                      <td className="py-2 text-white">{request.completionDate.toLocaleDateString()}</td>
+                      <td className="py-2 text-white">{new Date(request.requestDate).toLocaleDateString()}</td>
+                      <td className="py-2 text-white">{new Date(request.completionDate).toLocaleDateString()}</td>
                       <td className="py-2 text-white">
                         <span className={`px-2 py-1 rounded ${request.status === 'Assigned' ? 'bg-[#9f1239]' : 'bg-blue-500'}`}>{request.status}</span>
                       </td>
@@ -128,8 +128,8 @@ export default function RequestPage() {
                   {ongoingRequests.map((request, index) => (
                     <tr key={index} className="border-t border-gray-700 cursor-pointer" onClick={() => handleRowClick(request.id)}>
                       <td className="py-2 text-white">{request.certificateName}</td>
-                      <td className="py-2 text-white">{request.requestDate.toLocaleDateString()}</td>
-                      <td className="py-2 text-white">{request.completionDate.toLocaleDateString()}</td>
+                      <td className="py-2 text-white">{new Date(request.requestDate).toLocaleDateString()}</td>
+                      <td className="py-2 text-white">{new Date(request.completionDate).toLocaleDateString()}</td>
                       <td className="py-2 text-white">
                         <span className="px-2 py-1 rounded bg-[#9f1239]">{request.status}</span>
                       </td>

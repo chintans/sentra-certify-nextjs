@@ -45,14 +45,14 @@ export async function GET(request: Request) {
 
         const result: CompanyRequestCountDto[] = companies.map(company => ({
             name: company.name,
-            companyId: company.tenantId,
+            companyId: company.id,
             imageUrl: company.imageUrl ?? '',
             onGoing: company.certificateRequests.filter(
-                request => request.tenantId === company.tenantId && 
+                request => request.companyId === company.id && 
                 request.status !== "Completed"
             ).length,
             completed: company.certificateRequests.filter(
-                request => request.tenantId === company.tenantId && 
+                request => request.companyId === company.id && 
                 request.status === "Completed"
             ).length
         }));

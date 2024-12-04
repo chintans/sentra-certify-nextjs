@@ -44,8 +44,8 @@ export async function GET(request: NextRequest) {
         id: request.id,
         certificateType: request.certificateType.name,
         customerName: company.name,
-        requestDate: request.requestDate,
-        completionDate: request.dueDate,
+        requestDate: request.requestDate.toString(),
+        completionDate: request.dueDate.toString(),
         status: request.status,
         stage: request.stage
       }))
