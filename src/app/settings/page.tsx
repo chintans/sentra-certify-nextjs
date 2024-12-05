@@ -24,7 +24,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="mt-6">
-              <button className="bg-[#4CAF50] text-white px-6 py-2 rounded-lg hover:bg-[#45a049] transition-colors">
+              <button className="bg-[#4CAF50] text-white px-6 py-2 btn-success rounded-lg hover:bg-[#45a049] transition-colors">
                 {UPDATE_BUTTON_TEXT}
               </button>
             </div>

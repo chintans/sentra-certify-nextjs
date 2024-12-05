@@ -33,7 +33,6 @@ import { UserDto } from '@/types/user';
 export default function CompanyRequest() {
   const router = useRouter();
   const { companyId } = useParams();
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(NEW_REQUEST_TAB);
   const [newRequests, setNewRequests] = useState<RequestDto[]>([]);
@@ -171,68 +170,102 @@ export default function CompanyRequest() {
       </div>
 
       {activeTab === NEW_REQUEST_TAB && (
-        <div className="bg-[#1c1c24] p-6 rounded-lg">
-          <div className="grid grid-cols-5 gap-4 border border-gray-700 rounded-lg overflow-hidden">
+        <div className="bg-[#1c1c24] rounded-lg">
             {/* Header */}
-            <div className="col-span-5 grid grid-cols-5 gap-4 p-4 border-b border-gray-700 bg-[#1c1c24]">
-              <div className="text-gray-400">Certificate Name</div>
-              <div className="text-gray-400">{REQUEST_DATE_HEADER}</div>
-              <div className="text-gray-400">{COMPLETION_DATE_HEADER}</div>
-              <div className="text-gray-400">{STATUS_HEADER}</div>
-              <div className="text-gray-400">{ACTION_HEADER}</div>
-            </div>
-            
-            {/* Body */}
-            {newRequests.map((request, index) => (
-              <div key={index} className="col-span-5 grid grid-cols-5 gap-4 p-4 border-t border-gray-700">
-                <div className="text-white">{request.certificateType}</div>
-                <div className="text-white">{new Date(request.requestDate).toLocaleDateString()}</div>
-                <div className="text-white">{new Date(request.completionDate).toLocaleDateString()}</div>
-                <div className="text-white">
-                  <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
-                </div>
-                <div>
-                  <button className="px-4 py-2 bg-green-500 text-white rounded btn-success" 
-                          onClick={(e) => { e.stopPropagation(); handleAssignClick(request.id); }}>
-                    {ACCEPT_ASSIGN_BUTTON_TEXT}
-                  </button>
-                </div>
+            <div className="table-head flex justify-between bg-grey-1 rounded border new-request-list">
+              <div className="table-col">
+                <div className="text-left">Certificate Name</div>
               </div>
+              <div className="table-col">
+                <div className="text-left">{REQUEST_DATE_HEADER}</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">{COMPLETION_DATE_HEADER}</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">{STATUS_HEADER}</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">{ACTION_HEADER}</div>
+              </div>
+            </div>
+            {/* Body */}
+            <div className="table-body bg-grey-2 rounded border new-request-list">
+            {newRequests.map((request, index) => (
+              <div key={index} className="table-row flex justify-between">
+               <div className="table-cell">
+                 <div className="text-left">{request.certificateType}</div>
+               </div>
+               <div className="table-cell">
+                 <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+               </div>
+               <div className="table-cell">
+                 <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+               </div>
+               <div className="table-cell">
+                 <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>{request.status}</span>
+               </div>
+               <div className="table-cell">
+               <button className="px-4 py-2 bg-green-500 text-white rounded btn-success" 
+                           onClick={(e) => { e.stopPropagation(); handleAssignClick(request.id); }}>
+                     {ACCEPT_ASSIGN_BUTTON_TEXT}
+                   </button>
+               </div>
+             </div>
             ))}
           </div>
         </div>
       )}
 
       {activeTab === ASSIGNED_REQUEST_TAB && (
-        <div className="bg-[#1c1c24] p-6 rounded-lg">
-          <div className="grid grid-cols-6 gap-4 border border-gray-700 rounded-lg overflow-hidden">
+        <div className="bg-[#1c1c24] rounded-lg">
             {/* Header */}
-            <div className="col-span-6 grid grid-cols-6 gap-4 p-4 border-b border-gray-700 bg-[#1c1c24]">
-              <div className="text-gray-400">Certificate Name</div>
-              <div className="text-gray-400">{REQUEST_DATE_HEADER}</div>
-              <div className="text-gray-400">{COMPLETION_DATE_HEADER}</div>
-              <div className="text-gray-400">{STATUS_HEADER}</div>
-              <div className="text-gray-400">Members</div>
-              <div className="text-gray-400">Tech Reviewer</div>
-            </div>
-
-            {/* Body */}
-            {ongoingRequests.map((request, index) => (
-              <div key={index} 
-                   className="col-span-6 grid grid-cols-6 gap-4 p-4 border-t border-gray-700 cursor-pointer" 
-                   onClick={() => handleRowClick(request.id)}>
-                <div className="text-white">{request.certificateName}</div>
-                <div className="text-white">{new Date(request.requestDate).toLocaleDateString()}</div>
-                <div className="text-white">{new Date(request.completionDate).toLocaleDateString()}</div>
-                <div className="text-white">
-                  <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
-                </div>
-                <div className="text-white">{request.memberVerifier}</div>
-                <div className="text-white">{request.technicalVerifier}</div>
+            <div className="table-head flex justify-between bg-grey-1 rounded border ongoing-request-list">
+              <div className="table-col">
+                <div className="text-left">Certificate Name</div>
               </div>
+              <div className="table-col">
+                <div className="text-left">{REQUEST_DATE_HEADER}</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">{COMPLETION_DATE_HEADER}</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">{STATUS_HEADER}</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Member</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Tack Reviwer</div>
+              </div>
+            </div>
+            {/* Body */}
+            <div className="table-body bg-grey-2 rounded border ongoing-request-list">
+            {ongoingRequests.map((request, index) => (
+               <div key={index} className="table-row flex justify-between cursor-pointer"   onClick={() => handleRowClick(request.id)}>
+               <div className="table-cell">
+                 <div className="text-left">{request.certificateName}</div>
+               </div>
+               <div className="table-cell">
+                 <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+               </div>
+               <div className="table-cell">
+                 <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+               </div>
+               <div className="table-cell">
+                 <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>{request.status}</span>
+               </div>
+               <div className="table-cell">
+                  <div className="text-left"> {request.memberVerifier!=='undefined undefined' ? request.memberVerifier : 'N/A'}</div>
+               </div> 
+               <div className="table-cell">
+                  <div className="text-left">{request.technicalVerifier!=='undefined undefined' ? request.technicalVerifier : 'N/A'}</div>
+               </div> 
+             </div>
             ))}
           </div>
-        </div>
+          </div>
       )}
 
       {isDialogOpen && (

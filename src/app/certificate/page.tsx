@@ -33,7 +33,7 @@ export default function Certificate() {
     };
 
     fetchCompanies();
-  }, []);
+  }, [router]);
 
   const handleCompanyClick = (companyId: string) => {
     router.push(`/certificate/${companyId}/request`);

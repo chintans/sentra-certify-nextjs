@@ -18,7 +18,7 @@ export const CANCEL_BUTTON_TEXT = "Cancel";
 export const REQUEST_STATUS_INPROGRESS="OnTime";
 export const REQUEST_STATUS_NOTSTARTED="Not Started";
 export const REQUEST_STATUS_COMPLETED="Completed";
-export const REQUEST_STATUS_ACTIONREQUIRED="Action Required";
+export const REQUEST_STATUS_ACTIONREQUIRED="ActionRequired";
 export const REQUEST_STATUS_DELAYED="Delayed";
 export const REQUEST_STATUS_ASSIGNED="Assigned";
 
