@@ -15,7 +15,15 @@ export default function Certificate() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const data = await getCompaniesByEmail('tester@gmail.com');
+        const userEmail = localStorage.getItem('userEmail');
+        
+        if (!userEmail) {
+          console.error('No email found in localStorage');
+          router.push('/login'); 
+          return;
+        }
+
+        const data = await getCompaniesByEmail(userEmail);
         setCompanies(data);
       } catch (error) {
         console.error('Error fetching companies:', error);
