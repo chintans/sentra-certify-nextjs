@@ -3,15 +3,13 @@ import '../styles/globals.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FC } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const Sidebar: FC = () => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const handleLogout = () => {
-    // Add any logout logic here (clear session, cookies, etc.)
-    router.push('/login');
+    window.location.href = '/api/auth/logout';
   };
 
   return (
@@ -55,9 +53,9 @@ const Sidebar: FC = () => {
       <div className="mt-auto flex justify-center">
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-2 text-gray-400 text-white transition-colors"
+          className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
         >
-          <svg className={`w-5 h-5 ${pathname === '/login' ? 'text-[#20c997]' : 'text-gray-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           <span>Logout</span>
@@ -65,7 +63,7 @@ const Sidebar: FC = () => {
       </div>
       {/* Footer */}
       <div className="mt-4 text-xs text-gray-500 footer">
-        &copy; sentra.world 2023
+        &copy; sentra.world {new Date().getFullYear()}
       </div>
     </div>
   );
