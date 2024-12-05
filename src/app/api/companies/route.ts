@@ -1,28 +1,38 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CompanyRequestCountDto } from "@/types/certificate";
- 
+
+interface PrismaCompany {
+    id: number;
+    name: string;
+    imageUrl: string | null;
+    certificateRequests: Array<{
+        companyId: number;
+        status: string;
+    }>;
+}
+
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const email = searchParams.get('email');
- 
+
         if (!email) {
             return NextResponse.json({ error: 'Email is required' }, { status: 400 });
         }
- 
+
         // 1. Find user and their role
         const user = await prisma.authUser.findFirst({
             where: { email },
             include: { role: true }
         });
- 
+
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
- 
-        let companies;
-       
+
+        let companies: PrismaCompany[];
+
         // 2 & 3. Check role and fetch appropriate companies
         if (user.role.name === 'ADMIN') {
             // For admin, fetch all companies
@@ -42,8 +52,8 @@ export async function GET(request: Request) {
                 include: { certificateRequests: true }
             });
         }
- 
-        const result: CompanyRequestCountDto[] = companies.map(company => ({
+
+        const result: CompanyRequestCountDto[] = companies.map((company: PrismaCompany) => ({
             name: company.name,
             companyId: company.id,
             imageUrl: company.imageUrl ?? '',
@@ -56,9 +66,9 @@ export async function GET(request: Request) {
                 request.status === "Completed"
             ).length
         }));
- 
+
         return NextResponse.json(result);
- 
+
     } catch (error) {
         console.error('Error fetching company request counts:', error);
         return NextResponse.json(

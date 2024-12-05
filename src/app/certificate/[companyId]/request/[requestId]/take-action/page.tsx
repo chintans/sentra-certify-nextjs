@@ -79,31 +79,50 @@ export default function TakeAction() {
       </div>
     <div className="p-8">
       <div className="bg-[#1c1c24] p-6 rounded-lg">
-        <div className="grid grid-cols-6 gap-4 border border-gray-700 rounded-lg overflow-hidden mb-4">
           {/* Header */}
-          <div className="col-span-6 grid grid-cols-6 gap-4 p-4 border-b border-gray-700 bg-[#1c1c24]">
-            <div className="text-gray-400">Certificate Name</div>
-            <div className="text-gray-400">Request Date</div>
-            <div className="text-gray-400">Completion Date</div>
-            <div className="text-gray-400">Status</div>
-            <div className="text-gray-400">Members</div>
-            <div className="text-gray-400">Tech Reviewer</div>
-          </div>
-
-          {/* Body */}
-          <div className="col-span-6 grid grid-cols-6 gap-4 p-4 border-t border-gray-700">
-            <div className="text-white">{request.certificateName}</div>
-            <div className="text-white">{new Date(request.requestDate).toLocaleDateString()}</div>
-            <div className="text-white">{new Date(request.completionDate).toLocaleDateString()}</div>
-            <div className="text-white">
-              <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
+          <div className="table-head flex justify-between bg-grey-1 rounded border review-request">
+              <div className="table-col">
+                <div className="text-left">Certificate Name</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Request Date</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Completion Date</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Status</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Member</div>
+              </div>
+              <div className="table-col">
+                <div className="text-left">Tack Reviwer</div>
+              </div>
             </div>
-            <div className="text-white">{request.memberVerifier}</div>
-            <div className="text-white">{request.technicalVerifier}</div>
-          </div>
-        </div>
-
-        <div className="flex space-x-4 mb-4">
+          {/* Body */}
+          <div className="table-body bg-grey-2 rounded border review-request">
+               <div className="table-row flex justify-between cursor-pointer">
+               <div className="table-cell">
+                 <div className="text-left">{request.certificateName}</div>
+               </div>
+               <div className="table-cell">
+                 <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+               </div>
+               <div className="table-cell">
+                 <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+               </div>
+               <div className="table-cell">
+                 <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>{request.status}</span>
+               </div>
+               <div className="table-cell">
+                  <div className="text-left"> {request.memberVerifier!=='undefined undefined' ? request.memberVerifier : 'N/A'}</div>
+               </div> 
+               <div className="table-cell">
+                  <div className="text-left">{request.technicalVerifier!=='undefined undefined' ? request.technicalVerifier : 'N/A'}</div>
+               </div> 
+             </div>
+          <div className="flex space-x-4 p-4 mb-4">
           <button 
             className="px-2 py-1 btn-success text-white rounded" 
             onClick={handleGenerateSampleClick}
@@ -118,13 +137,13 @@ export default function TakeAction() {
           </button>
         </div>
         <div>
-          <h2 className="text-white mb-2">Comments</h2>
+          <h2 className="text-white mb-2 pl-2">Comments</h2>
           {request.comments.map((comment, index) => (
-            <p key={index} className="text-white f-14 p-2 mt-3">{comment.comment}</p>
+            <p key={index} className="text-white opacity-8 f-14 pl-2 mt-3">{comment.comment}</p>
           ))}
         </div>
+      </div></div>
       </div>
-    </div>
     </div>
   );
 }

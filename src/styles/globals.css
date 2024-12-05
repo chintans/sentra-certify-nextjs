@@ -50,6 +50,7 @@ body {
   border-radius: 4px;
   font-size: 14px;
   display: inline-block;
+  opacity:0.8 ;
 }
 
 .status-tag.assigned {
@@ -194,17 +195,12 @@ body {
     flex: 1;
     padding: 0 3rem;
     }
-   .table-head .text-left{
-      opacity: 1;
-    }
+
 }
 .ongoing-request-list{
   .table-col, .table-cell {
     flex: 1;
     padding: 0 2rem;
-    }
-    .table-head .text-left{
-      opacity: 1;
     }
 }
 .review-request{
@@ -212,9 +208,7 @@ body {
     flex: 1;
     padding: 0 2rem;
     }
-    .table-head .text-left{
-      opacity: 1;
-    }  
+   
 }
 m-4{
       margin: 4rem;
@@ -268,4 +262,7 @@ m-4{
 
 .w-14{
   width: 14rem;
+}
+.pl-2{
+  padding-left: 2rem;
 }
