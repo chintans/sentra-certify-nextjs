@@ -2,7 +2,7 @@
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import '../../../../styles/globals.css';
-import { getCertificateRequests, getOngoingRequests } from '../../../../services/certificateService';
+import { getCertificateRequests, getOngoingRequests, getUsers } from '../../../../services/certificateService';
 import { OngoingRequestDto, RequestDto } from '../../../../types/certificate';
 import { 
   ACCEPT_ASSIGN_BUTTON_TEXT, 
@@ -28,8 +28,7 @@ import {
   ASSIGN_BUTTON_TEXT,
   CANCEL_BUTTON_TEXT 
 } from '../../../../constants/strings';
-
-
+import { UserDto } from '@/types/user';
 
 export default function CompanyRequest() {
   const router = useRouter();
@@ -40,6 +39,9 @@ export default function CompanyRequest() {
   const [newRequests, setNewRequests] = useState<RequestDto[]>([]);
   const [ongoingRequests, setOngoingRequests] = useState<OngoingRequestDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<UserDto[]>([]);
+  const [selectedMember, setSelectedMember] = useState("");
+  const [selectedReviewer, setSelectedReviewer] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +55,6 @@ export default function CompanyRequest() {
         setOngoingRequests(ongoingRequestsData);
       } catch (error) {
         console.error('Error fetching requests:', error);
-        // Handle error appropriately
       } finally {
         setLoading(false);
       }
@@ -61,6 +62,19 @@ export default function CompanyRequest() {
 
     fetchData();
   }, [companyId]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersData = await getUsers();
+        setUsers(usersData);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   function getStatusClass(status: string): string {
     switch (status) {
@@ -87,6 +101,8 @@ export default function CompanyRequest() {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+    setSelectedMember("");
+    setSelectedReviewer("");
   };
 
   const handleTabClick = (tab: string) => {
@@ -97,18 +113,22 @@ export default function CompanyRequest() {
     router.push(`/certificate/${companyId}/request/${id}/take-action`);
   };
 
+  const handleAssign = () => {
+    // Add your assign logic here
+    console.log('Assigned to:', { member: selectedMember, reviewer: selectedReviewer });
+    handleCloseDialog();
+  };
+
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       const dialogElement = document.getElementById('assign-dialog');
       if (dialogElement && !dialogElement.contains(event.target as Node)) {
-        setIsDialogOpen(false);
+        handleCloseDialog();
       }
     };
 
     if (isDialogOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
-    } else {
-      document.removeEventListener('mousedown', handleOutsideClick);
     }
 
     return () => {
@@ -141,104 +161,68 @@ export default function CompanyRequest() {
       </div>
 
       {activeTab === NEW_REQUEST_TAB && (
-        <div className='new-request-list'>
-        <div className="table-head flex justify-between bg-grey-1 p-2 rounded border">
-          <div className="table-col">
-            <div className="text-left">Certificate Name</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">{REQUEST_DATE_HEADER}</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">{COMPLETION_DATE_HEADER}</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">{STATUS_HEADER}</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left"></div>
+        <div className="bg-[#1c1c24] p-6 rounded-lg">
+          <div className="grid grid-cols-5 gap-4 border border-gray-700 rounded-lg overflow-hidden">
+            {/* Header */}
+            <div className="col-span-5 grid grid-cols-5 gap-4 p-4 border-b border-gray-700 bg-[#1c1c24]">
+              <div className="text-gray-400">Certificate Name</div>
+              <div className="text-gray-400">{REQUEST_DATE_HEADER}</div>
+              <div className="text-gray-400">{COMPLETION_DATE_HEADER}</div>
+              <div className="text-gray-400">{STATUS_HEADER}</div>
+              <div className="text-gray-400">{ACTION_HEADER}</div>
+            </div>
+            
+            {/* Body */}
+            {newRequests.map((request, index) => (
+              <div key={index} className="col-span-5 grid grid-cols-5 gap-4 p-4 border-t border-gray-700">
+                <div className="text-white">{request.certificateType}</div>
+                <div className="text-white">{new Date(request.requestDate).toLocaleDateString()}</div>
+                <div className="text-white">{new Date(request.completionDate).toLocaleDateString()}</div>
+                <div className="text-white">
+                  <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
+                </div>
+                <div>
+                  <button className="px-4 py-2 bg-green-500 text-white rounded btn-success" 
+                          onClick={(e) => { e.stopPropagation(); handleAssignClick(); }}>
+                    {ACCEPT_ASSIGN_BUTTON_TEXT}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="table-body mt-3 bg-grey-2 rounded border ">
-              {newRequests.map((request, index) => (
-                <div key={index} className="table-row flex justify-between">
-                  <div className="table-cell">
-                    <div className="text-left">{request.certificateType}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className={`status ${getStatusClass(request.status)}`}>
-                      {request.status}
-                    </div>
-                  </div>
-                  <div className="table-cell">
-                    <button 
-                      className="btn btn-success"
-                      onClick={(e) => { e.stopPropagation(); handleAssignClick(); }}
-                    >
-                      {ACCEPT_ASSIGN_BUTTON_TEXT}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
       )}
 
       {activeTab === ASSIGNED_REQUEST_TAB && (
-        <div className="ongoing-request-list">
-        <div className="table-head flex justify-between bg-grey-1 p-2 rounded border">
-          <div className="table-col">
-            <div className="text-left">Certificate Name</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">{REQUEST_DATE_HEADER}</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">{COMPLETION_DATE_HEADER}</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">{STATUS_HEADER}</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">Members</div>
-          </div>
-          <div className="table-col">
-            <div className="text-left">Tech Reviewer</div>
+        <div className="bg-[#1c1c24] p-6 rounded-lg">
+          <div className="grid grid-cols-6 gap-4 border border-gray-700 rounded-lg overflow-hidden">
+            {/* Header */}
+            <div className="col-span-6 grid grid-cols-6 gap-4 p-4 border-b border-gray-700 bg-[#1c1c24]">
+              <div className="text-gray-400">Certificate Name</div>
+              <div className="text-gray-400">{REQUEST_DATE_HEADER}</div>
+              <div className="text-gray-400">{COMPLETION_DATE_HEADER}</div>
+              <div className="text-gray-400">{STATUS_HEADER}</div>
+              <div className="text-gray-400">Members</div>
+              <div className="text-gray-400">Tech Reviewer</div>
+            </div>
+
+            {/* Body */}
+            {ongoingRequests.map((request, index) => (
+              <div key={index} 
+                   className="col-span-6 grid grid-cols-6 gap-4 p-4 border-t border-gray-700 cursor-pointer" 
+                   onClick={() => handleRowClick(request.id)}>
+                <div className="text-white">{request.certificateName}</div>
+                <div className="text-white">{new Date(request.requestDate).toLocaleDateString()}</div>
+                <div className="text-white">{new Date(request.completionDate).toLocaleDateString()}</div>
+                <div className="text-white">
+                  <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
+                </div>
+                <div className="text-white">{request.members}</div>
+                <div className="text-white">{request.technicalReviewer}</div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="table-body mt-3 bg-grey-2 rounded border">
-              {ongoingRequests.map((request, index) => (
-                <div key={index} className="table-row flex justify-between cursor-pointer" onClick={() => handleRowClick(request.id)}>
-                  <div className="table-cell">
-                    <div className="text-left">{request.certificateName}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className={`status ${getStatusClass(request.status)}`}>
-                      {request.status}
-                    </div>
-                  </div>
-                  <div className="table-cell">
-                    <div className="text-left">{request.members}</div>
-                  </div>
-                  <div className="table-cell">
-                    <div className="text-left">{request.technicalReviewer}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
       )}
 
       {isDialogOpen && (
@@ -250,21 +234,48 @@ export default function CompanyRequest() {
             </div>
             <div className="mb-4">
               <label className="block f-14 mb-1">Members</label>
-              <select className="w-full p-2 bg-gray-800 f-12 text-white rounded">
-                <option>Select Member</option>
-                {/* Add member options here */}
+              <select 
+                className="w-full p-2 bg-gray-800 f-12 text-white rounded"
+                value={selectedMember}
+                onChange={(e) => setSelectedMember(e.target.value)}
+              >
+                <option value="">Select Member</option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.email}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="block f-14 mb-1">Technical Reviewer</label>
-              <select className="w-full p-2 bg-gray-800 f-12 text-white rounded">
-                <option>Select Technical Reviewer</option>
-                {/* Add reviewer options here */}
+              <select 
+                className="w-full p-2 bg-gray-800 f-12 text-white rounded"
+                value={selectedReviewer}
+                onChange={(e) => setSelectedReviewer(e.target.value)}
+              >
+                <option value="">Select Technical Reviewer</option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.email}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex justify-end">
-              <button className="px-2 py-1 f-14 text-white rounded mr-2 btn-success" onClick={handleCloseDialog}>{ASSIGN_BUTTON_TEXT}</button>
-              <button onClick={handleCloseDialog} className="px-2 py-1 f-14 bg-gray-700 text-white rounded btn-cancel">{CANCEL_BUTTON_TEXT}</button>
+              <button 
+                className="px-2 py-1 f-14 text-white rounded mr-2 btn-success" 
+                onClick={handleAssign}
+                disabled={!selectedMember || !selectedReviewer}
+              >
+                {ASSIGN_BUTTON_TEXT}
+              </button>
+              <button 
+                onClick={handleCloseDialog} 
+                className="px-2 py-1 f-14 bg-gray-700 text-white rounded btn-cancel"
+              >
+                {CANCEL_BUTTON_TEXT}
+              </button>
             </div>
           </div>
         </div>

@@ -79,30 +79,30 @@ export default function TakeAction() {
       </div>
     <div className="p-8">
       <div className="bg-[#1c1c24] p-6 rounded-lg">
-        <table className="w-full text-left mb-4">
-          <thead className="border border-gray-700 border-radius-8 overflow-hidden">
-            <tr>
-              <th className="text-gray-400 table-header">Certificate Name</th>
-              <th className="text-gray-400 table-header">Request Date</th>
-              <th className="text-gray-400 table-header">Completion Date</th>
-              <th className="text-gray-400 table-header">Status</th>
-              <th className="text-gray-400 table-header">Members</th>
-              <th className="text-gray-400 table-header">Tech Reviewer</th>
-            </tr>
-          </thead>
-          <tbody className="border border-gray-700 border-radius-8 overflow-hidden">
-            <tr className="border-t border-gray-700">
-              <td className="py-2 text-white table-cell">{request.certificateName}</td>
-              <td className="py-2 text-white table-cell">{new Date(request.requestDate).toLocaleDateString()}</td>
-              <td className="py-2 text-white table-cell">{new Date(request.completionDate).toLocaleDateString()}</td>
-              <td className="py-2 text-white table-cell">
-                <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
-              </td>
-              <td className="py-2 text-white table-cell">{request.members}</td>
-              <td className="py-2 text-white table-cell">{request.technicalReviewer}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="grid grid-cols-6 gap-4 border border-gray-700 rounded-lg overflow-hidden mb-4">
+          {/* Header */}
+          <div className="col-span-6 grid grid-cols-6 gap-4 p-4 border-b border-gray-700 bg-[#1c1c24]">
+            <div className="text-gray-400">Certificate Name</div>
+            <div className="text-gray-400">Request Date</div>
+            <div className="text-gray-400">Completion Date</div>
+            <div className="text-gray-400">Status</div>
+            <div className="text-gray-400">Members</div>
+            <div className="text-gray-400">Tech Reviewer</div>
+          </div>
+
+          {/* Body */}
+          <div className="col-span-6 grid grid-cols-6 gap-4 p-4 border-t border-gray-700">
+            <div className="text-white">{request.certificateName}</div>
+            <div className="text-white">{new Date(request.requestDate).toLocaleDateString()}</div>
+            <div className="text-white">{new Date(request.completionDate).toLocaleDateString()}</div>
+            <div className="text-white">
+              <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
+            </div>
+            <div className="text-white">{request.members}</div>
+            <div className="text-white">{request.technicalReviewer}</div>
+          </div>
+        </div>
+
         <div className="flex space-x-4 mb-4">
           <button 
             className="px-2 py-1 btn-success text-white rounded" 
