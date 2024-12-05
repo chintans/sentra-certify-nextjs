@@ -9,6 +9,8 @@ const Sidebar: FC = () => {
   const pathname = usePathname();
 
   const handleLogout = () => {
+    // Clear all data from localStorage
+    localStorage.clear();
     window.location.href = '/api/auth/logout';
   };
 

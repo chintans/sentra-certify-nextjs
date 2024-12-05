@@ -3,6 +3,7 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { setUserInStorage } from '@/utils/auth';
 
 export default function Home() {
   const router = useRouter();
@@ -10,6 +11,15 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
+      // Store user details using utility function
+      setUserInStorage({
+        email: user.email || '',
+        name: user.name || '',
+        picture: user.picture || '',
+        sub: user.sub || '',
+        nickname: user.nickname || '',
+        updated_at: user.updated_at || ''
+      });
       router.push('/certificate');
     } else if (!isLoading && !error) {
       window.location.href = '/api/auth/login';
