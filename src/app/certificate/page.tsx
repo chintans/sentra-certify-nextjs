@@ -15,7 +15,7 @@ export default function Certificate() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const userEmail = localStorage.getItem('userEmail');
+        const userEmail = localStorage.getItem('email');
         
         if (!userEmail) {
           console.error('No email found in localStorage');
