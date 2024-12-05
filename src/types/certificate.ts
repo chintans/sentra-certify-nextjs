@@ -24,8 +24,8 @@ export interface RequestDto {
     completionDate: Date;
     status: string;
     comments: CommentsDto[];
-    members?: string;
-    technicalReviewer?: string;
+    memberVerifier?: string;
+    technicalVerifier?: string;
   }
 
   export interface Company{

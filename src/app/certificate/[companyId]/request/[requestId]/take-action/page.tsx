@@ -98,8 +98,8 @@ export default function TakeAction() {
             <div className="text-white">
               <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
             </div>
-            <div className="text-white">{request.members}</div>
-            <div className="text-white">{request.technicalReviewer}</div>
+            <div className="text-white">{request.memberVerifier}</div>
+            <div className="text-white">{request.technicalVerifier}</div>
           </div>
         </div>
 

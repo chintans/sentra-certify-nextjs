@@ -47,3 +47,13 @@ export async function getUsers(): Promise<UserDto[]> {
   const { data } = await axios.get('/api/users');
   return data;
 }
+
+interface TaskAllocationDto {
+  certificateId: number;
+  memberVerifierId: number;
+  technicalVerifierId: number;
+}
+
+export async function assignTask(taskAllocation: TaskAllocationDto): Promise<void> {
+  await axios.post('/api/users-mapping', taskAllocation);
+}
