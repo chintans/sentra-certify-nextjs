@@ -23,7 +23,12 @@ export async function GET(request: NextRequest) {
       },
       include: {
         certificateType: true,
-        comments: true
+        comments: true,
+        verifierMappings: {
+          include: {
+            verifier: true
+          }
+        }
       }
     });
 
@@ -40,6 +45,8 @@ export async function GET(request: NextRequest) {
       requestDate: certificateRequest.requestDate,
       completionDate: certificateRequest.dueDate,
       status: certificateRequest.status,
+      memberVerifier: `${certificateRequest.verifierMappings[0]?.verifier.firstName} ${certificateRequest.verifierMappings[0]?.verifier.lastName}`,
+      technicalVerifier: `${certificateRequest.verifierMappings[1]?.verifier.firstName} ${certificateRequest.verifierMappings[1]?.verifier.lastName}`,
       comments: certificateRequest.comments.map((comment: Comment) => ({
         sender: comment.senderName,
         comment: comment.comment

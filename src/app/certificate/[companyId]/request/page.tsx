@@ -2,7 +2,7 @@
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import '../../../../styles/globals.css';
-import { getCertificateRequests, getOngoingRequests, getUsers } from '../../../../services/certificateService';
+import { assignTask, getCertificateRequests, getOngoingRequests, getUsers } from '../../../../services/certificateService';
 import { OngoingRequestDto, RequestDto } from '../../../../types/certificate';
 import { 
   ACCEPT_ASSIGN_BUTTON_TEXT, 
@@ -42,7 +42,7 @@ export default function CompanyRequest() {
   const [users, setUsers] = useState<UserDto[]>([]);
   const [selectedMember, setSelectedMember] = useState("");
   const [selectedReviewer, setSelectedReviewer] = useState("");
-
+  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -95,9 +95,10 @@ export default function CompanyRequest() {
     }
   }
 
-  const handleAssignClick = () => {
+  const handleAssignClick = (requestId: number) => {
+    setSelectedRequestId(requestId);
     setIsDialogOpen(true);
-  };
+  }
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
@@ -113,10 +114,19 @@ export default function CompanyRequest() {
     router.push(`/certificate/${companyId}/request/${id}/take-action`);
   };
 
-  const handleAssign = () => {
-    // Add your assign logic here
-    console.log('Assigned to:', { member: selectedMember, reviewer: selectedReviewer });
-    handleCloseDialog();
+  const handleAssign = async () => {
+    try {
+      await assignTask({
+        memberVerifierId: Number(selectedMember),
+        technicalVerifierId: Number(selectedReviewer),
+        certificateId: Number(selectedRequestId)
+      });
+      // Optional: Add success notification or refresh data
+      handleCloseDialog();
+    } catch (error) {
+      console.error('Error assigning task:', error);
+      // Optional: Add error notification
+    }
   };
 
   useEffect(() => {
@@ -183,7 +193,7 @@ export default function CompanyRequest() {
                 </div>
                 <div>
                   <button className="px-4 py-2 bg-green-500 text-white rounded btn-success" 
-                          onClick={(e) => { e.stopPropagation(); handleAssignClick(); }}>
+                          onClick={(e) => { e.stopPropagation(); handleAssignClick(request.id); }}>
                     {ACCEPT_ASSIGN_BUTTON_TEXT}
                   </button>
                 </div>
@@ -217,8 +227,8 @@ export default function CompanyRequest() {
                 <div className="text-white">
                   <span className={`px-2 py-1 rounded status ${getStatusClass(request.status)}`}>{request.status}</span>
                 </div>
-                <div className="text-white">{request.members}</div>
-                <div className="text-white">{request.technicalReviewer}</div>
+                <div className="text-white">{request.memberVerifier}</div>
+                <div className="text-white">{request.technicalVerifier}</div>
               </div>
             ))}
           </div>
