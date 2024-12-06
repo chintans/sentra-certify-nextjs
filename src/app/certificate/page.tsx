@@ -55,7 +55,7 @@ export default function Certificate() {
                   key={index} 
                   className="bg-[#1c1c24] rounded-lg overflow-hidden cursor-pointer hover:bg-[#2a2a36] transition-colors"
                   onClick={() => handleCompanyClick(company.companyId)}
-                >
+                >                  
                   {/* Company Logo/Name Section */}
                   <div className="h-48 relative flex items-center justify-center">
                     {company.imageUrl ? (
@@ -67,12 +67,12 @@ export default function Certificate() {
                         className="object-contain"
                       />
                     ) : (
-                      <div className={`w-full h-full bg-[#6366f1] flex items-center justify-center`}>
+                      <div className={`wh-90 bg-[#6366f1] flex items-center justify-center`}>
                         <span className="text-2xl text-white font-semibold">{company.name}</span>
                       </div>
                     )}
                     {/* Notification Badge */}
-                    {(company.onGoing > 0) && (
+                     {(company.onGoing > 0) && (
                       <div className="absolute top-4 right-4 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center">
                         {company.onGoing}
                       </div>
@@ -80,15 +80,12 @@ export default function Certificate() {
                   </div>
 
                   {/* Stats Section */}
-                  <div className="p-4 border-t border-gray-700">
-                    <div className="flex justify-between items-center text-sm">
-                      <div>
-                        <span className="text-gray-400">Ongoing</span>
-                        <span className="text-white ml-4">: {company.onGoing}</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">Completed</span>
-                        <span className="text-white ml-4">: {company.completed}</span>
+                  <div className="p-4">
+                    <div className="flex justify-between items-center">
+                      <div className='f-16'>
+                        <div className="">Ongoing: {company.onGoing}</div>
+                        <div className="">Completed: {company.completed}</div>
+                          
                       </div>
                     </div>
                   </div>
