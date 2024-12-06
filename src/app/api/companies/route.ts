@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { CompanyRequestCountDto } from "@/types/certificate";
+import { PrismaClient } from "@prisma/client";
 
-interface PrismaCompany {
+interface Company {
     id: number;
     name: string;
     imageUrl: string | null;
@@ -11,6 +11,14 @@ interface PrismaCompany {
         status: string;
     }>;
 }
+
+const globalForPrisma = globalThis as unknown as {
+    prisma: PrismaClient | undefined
+}
+
+const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export async function GET(request: Request) {
     try {
@@ -31,10 +39,10 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        let companies: PrismaCompany[];
+        let companies: Company[];
 
         // 2 & 3. Check role and fetch appropriate companies
-        if (user.role.name === 'ADMIN') {
+        if (user.role.name === 'Admin') {
             // For admin, fetch all companies
             companies = await prisma.company.findMany({
                 include: { certificateRequests: true }
@@ -53,7 +61,7 @@ export async function GET(request: Request) {
             });
         }
 
-        const result: CompanyRequestCountDto[] = companies.map((company: PrismaCompany) => ({
+        const result: CompanyRequestCountDto[] = companies.map((company: Company) => ({
             name: company.name,
             companyId: company.id,
             imageUrl: company.imageUrl ?? '',
