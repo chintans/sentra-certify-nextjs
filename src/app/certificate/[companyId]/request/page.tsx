@@ -278,7 +278,7 @@ export default function CompanyRequest() {
             <div className="mb-4">
               <label className="block f-14 mb-1">Members</label>
               <select 
-                className="w-full p-2 bg-gray-800 f-12 text-white rounded"
+                className="w-full p-2 bg-gray-800 f-14 text-white rounded"
                 value={selectedMember}
                 onChange={(e) => setSelectedMember(e.target.value)}
               >
@@ -293,7 +293,7 @@ export default function CompanyRequest() {
             <div className="mb-4">
               <label className="block f-14 mb-1">Technical Reviewer</label>
               <select 
-                className="w-full p-2 bg-gray-800 f-12 text-white rounded"
+                className="w-full p-2 bg-gray-800 f-14 text-white rounded"
                 value={selectedReviewer}
                 onChange={(e) => setSelectedReviewer(e.target.value)}
               >
@@ -305,7 +305,7 @@ export default function CompanyRequest() {
                 ))}
               </select>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-start">
               <button 
                 className="px-2 py-1 f-14 text-white rounded mr-2 btn-success" 
                 onClick={handleAssign}
