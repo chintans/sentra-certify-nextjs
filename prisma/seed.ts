@@ -2,6 +2,17 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+
+  const existingCompany = await prisma.company.findFirst({
+    where: {
+      tenantId: 'AE1A972C-3EDF-4B6D-B96D-9278EEF5B99E'
+    }
+  });
+
+  if (existingCompany) {
+    console.log('Data already seeded');
+    return;
+  }
   // Seed Roles
   const adminRole = await prisma.role.create({
     data: {
