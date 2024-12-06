@@ -32,7 +32,7 @@ async function main() {
       name: 'Test Company',
       tenantId: 'AE1A972C-3EDF-4B6D-B96D-9278EEF5B99E', // example UUID
       email: 'test@company.com',
-      imageUrl: 'https://example.com/image.jpg',
+      imageUrl: '',
     },
   });
 
