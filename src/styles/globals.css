@@ -393,3 +393,14 @@ btn-cancel{
   border: 1px solid #323a49;
   background: #212631;
 }
+
+.btn-upload {
+  border: 1px solid #1bb789;
+  color: #1bb789;
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 18px;
+  border-radius: 4px;
+  background-color: #17181d;
+  padding: 4px 22px;
+}
