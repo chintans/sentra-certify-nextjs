@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ProtectedPage from '@/components/ProtectedPage';
 import '../../styles/globals.css';
+import { importService } from '@/services/importService';
 
 interface UploadedFile {
   id: number;
@@ -69,14 +70,7 @@ export default function ImportPage() {
         f.id === fileId ? { ...f, status: 'processing' as const } : f
       ));
 
-      const response = await fetch('/api/import', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
+      await importService.importExcelFile(file);
 
       // Update status to completed
       setFiles(prev => prev.map(f => 
