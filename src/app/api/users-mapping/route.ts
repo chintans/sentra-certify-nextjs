@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
     }
 
-    // Create both mappings in a single transaction
+    // Modified transaction to include status update
     await prisma.$transaction(async (tx) => {
       await tx.verifierCertificateMapping.createMany({
         data: [
@@ -28,8 +28,18 @@ export async function POST(request: Request) {
             verifierId: body.technicalVerifierId,
           }
         ]
-      })
-    })
+      });
+
+      // Add status update
+      await tx.certificateRequests.update({
+        where: {
+          id: body.certificateId
+        },
+        data: {
+          status: 'Assigned'
+        }
+      });
+    });
 
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
