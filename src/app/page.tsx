@@ -10,20 +10,23 @@ export default function Home() {
   const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    if (user) {
-      // Store user details using utility function
-      setUserInStorage({
-        email: user.email || '',
-        name: user.name || '',
-        picture: user.picture || '',
-        sub: user.sub || '',
-        nickname: user.nickname || '',
-        updated_at: user.updated_at || ''
-      });
-      router.push('/certificate');
-    } else if (!isLoading && !error) {
-      window.location.href = '/api/auth/login';
-    }
+    const storeUserData = async () => {
+      if (user) {
+        await setUserInStorage({
+          email: user.email || '',
+          name: user.name || '',
+          picture: user.picture || '',
+          sub: user.sub || '',
+          nickname: user.nickname || '',
+          updated_at: user.updated_at || ''
+        });
+        router.push('/certificate');
+      } else if (!isLoading && !error) {
+        window.location.href = '/api/auth/login';
+      }
+    };
+
+    storeUserData();
   }, [user, isLoading, error, router]);
 
   if (isLoading) {
