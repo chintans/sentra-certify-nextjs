@@ -3,7 +3,7 @@ import '../../styles/globals.css';
 import { useState, useEffect } from 'react';
 import { USERS_TITLE, USER_ROLES_TITLE, NAME_HEADER, EMAIL_HEADER, ROLE_HEADER, ACTION_HEADER } from '../../constants/strings';
 import ProtectedPage from '@/components/ProtectedPage';
-import { userService } from '@/services/userService';
+import { companyService, userService } from '@/services/userService';
 
 interface User {
   firstName: string;
@@ -22,20 +22,25 @@ export default function UserRolesPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // Get companyId from localStorage
-        const companyId = '1';
+        // Get tenantId from localStorage
+        const tenantId = localStorage.getItem('user_metadata');
         
-        // if (typeof window !== 'undefined') {
-        //   companyId = localStorage.getItem('companyId');
-        // }
-        
-        if (!companyId) {
-          setError('Company ID not found. Please login again.');
+        if (!tenantId) {
+          setError('Tenant ID not found. Please login again.');
           setLoading(false);
           return;
         }
 
-        const fetchedUsers = await userService.getUsers(parseInt(companyId));
+        // Get companyId using tenantId
+        const companyId = await companyService.getCompanyIdByTenant(tenantId);
+
+        if (!companyId) {
+          setError('Company not found for this tenant.');
+          setLoading(false);
+          return;
+        }
+
+        const fetchedUsers = await userService.getUsers(companyId);
         setUsers(fetchedUsers);
         setError(null);
       } catch (error) {

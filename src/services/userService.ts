@@ -28,6 +28,10 @@ interface GetCompanyResponse {
   company: Company;
 }
 
+interface CompanyIdResponse {
+  companyId: number;
+}
+
 
 
 export const userService = {
@@ -67,6 +71,19 @@ export const companyService = {
       return data.company;
     } catch (error) {
       console.error("Error fetching company:", error);
+      throw error;
+    }
+  },
+
+  getCompanyIdByTenant: async (tenantId: string): Promise<number> => {
+    try {
+      const cleanTenantId = tenantId.replace(/"/g, '');
+      const { data } = await axios.get<CompanyIdResponse>(
+        `/api/companies/tenant/${cleanTenantId}`
+      );
+      return data.companyId;
+    } catch (error) {
+      console.error('Error fetching company ID:', error);
       throw error;
     }
   },

@@ -20,14 +20,18 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchCompany = async () => {
       try {
-        //const companyId = localStorage.getItem('companyId');
-        const companyId = '1';
+        const tenantId = localStorage.getItem('user_metadata');
+        if (!tenantId) {
+          setError('Tenant ID not found');
+          return;
+        }
+        const companyId = await companyService.getCompanyIdByTenant(tenantId);
         if (!companyId) {
           setError('Company ID not found');
           return;
         }
 
-        const companyData = await companyService.getCompany(parseInt(companyId));
+        const companyData = await companyService.getCompany(companyId);
         setCompany(companyData);
       } catch (error) {
         setError('Failed to load company data');
