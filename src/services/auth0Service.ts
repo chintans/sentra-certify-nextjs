@@ -1,5 +1,5 @@
 export const auth0Service = {
-  async getUserMetadata(userId: string): Promise<any> {
+  async getUserMetadata(userId: string): Promise<string> {
     try {
       const response = await fetch(`/api/auth/management?userId=${encodeURIComponent(userId)}`);
       
