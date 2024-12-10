@@ -7,7 +7,7 @@ interface UserData {
   sub?: string;
   nickname?: string;
   updated_at?: string;
-  metadata?: any;
+  metadata?: string;
 }
 
 export const getUserFromStorage = (): UserData | null => {
@@ -20,7 +20,7 @@ export const getUserFromStorage = (): UserData | null => {
       sub: localStorage.getItem('sub') || '',
       nickname: localStorage.getItem('nickname') || '',
       updated_at: localStorage.getItem('updated_at') || '',
-      metadata: JSON.parse(localStorage.getItem('user_metadata') || '{}')
+      metadata: JSON.parse(localStorage.getItem('user_metadata') || '')
     };
   } catch (error) {
     console.error('Error getting user from storage:', error);
