@@ -82,10 +82,11 @@ export default function Certificate() {
                   {/* Stats Section */}
                   <div className="p-4">
                     <div className="flex justify-between items-center">
-                      <div className='f-16'>
-                        <div className="">Ongoing: {company.onGoing}</div>
-                        <div className="">Completed: {company.completed}</div>
-                          
+                      <div className='f-16 grid grid-cols-[auto,1fr] gap-x-6'>
+                        <div>Ongoing</div>
+                        <div>:    {company.onGoing}</div>
+                        <div>Completed</div>
+                        <div>:    {company.completed}</div>
                       </div>
                     </div>
                   </div>

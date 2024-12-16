@@ -24,7 +24,6 @@ import {
   REQUEST_DATE_HEADER, 
   COMPLETION_DATE_HEADER, 
   STATUS_HEADER, 
-  ACTION_HEADER,
   ASSIGN_BUTTON_TEXT,
   CANCEL_BUTTON_TEXT 
 } from '../../../../constants/strings';
@@ -113,6 +112,19 @@ export default function CompanyRequest() {
     router.push(`/certificate/${companyId}/request/${id}/take-action`);
   };
 
+  const formatDate = (date: string | Date) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const addSpacesToCamelCase = (text: string) => {
+    return text.replace(/([A-Z])/g, ' $1').trim();
+  }
+
   const handleAssign = async () => {
     try {
       await assignTask({
@@ -186,7 +198,7 @@ export default function CompanyRequest() {
                 <div className="text-left">{STATUS_HEADER}</div>
               </div>
               <div className="table-col">
-                <div className="text-left">{ACTION_HEADER}</div>
+                <div className="text-left"></div>
               </div>
             </div>
             {/* Body */}
@@ -197,13 +209,15 @@ export default function CompanyRequest() {
                  <div className="text-left">{request.certificateType}</div>
                </div>
                <div className="table-cell">
-                 <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+                 <div className="text-left">{formatDate(request.requestDate)}</div>
                </div>
                <div className="table-cell">
-                 <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+                 <div className="text-left">{formatDate(request.completionDate)}</div>
                </div>
                <div className="table-cell">
-                 <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>{request.status}</span>
+               <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>
+                  {addSpacesToCamelCase(request.status)}
+                </span>
                </div>
                <div className="table-cell">
                <button className="px-4 py-2 bg-green-500 text-white rounded btn-success" 
@@ -234,10 +248,10 @@ export default function CompanyRequest() {
                 <div className="text-left">{STATUS_HEADER}</div>
               </div>
               <div className="table-col">
-                <div className="text-left">Member</div>
+                <div className="text-left">Members</div>
               </div>
               <div className="table-col">
-                <div className="text-left">Tack Reviwer</div>
+                <div className="text-left">Tech Reviewer</div>
               </div>
             </div>
             {/* Body */}
@@ -248,14 +262,16 @@ export default function CompanyRequest() {
                  <div className="text-left">{request.certificateName}</div>
                </div>
                <div className="table-cell">
-                 <div className="text-left">{new Date(request.requestDate).toLocaleDateString()}</div>
+                 <div className="text-left">{formatDate(request.requestDate)}</div>
                </div>
                <div className="table-cell">
-                 <div className="text-left">{new Date(request.completionDate).toLocaleDateString()}</div>
+                 <div className="text-left">{formatDate(request.completionDate)}</div>
                </div>
                <div className="table-cell">
-                 <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>{request.status}</span>
-               </div>
+                <span className={`px-2 py-1 rounded status-tag ${getStatusClass(request.status)}`}>
+                  {addSpacesToCamelCase(request.status)}
+                </span>
+              </div>
                <div className="table-cell">
                   <div className="text-left"> {request.memberVerifier!=='undefined undefined' ? request.memberVerifier : 'N/A'}</div>
                </div> 
@@ -307,7 +323,7 @@ export default function CompanyRequest() {
             </div>
             <div className="flex justify-start">
               <button 
-                className="px-2 py-1 f-14 text-white rounded mr-2 btn-success" 
+                className="px-2 py-1 f-14 text-white rounded mr-2 btn-success disabled:opacity-50 disabled:cursor-not-allowed" 
                 onClick={handleAssign}
                 disabled={!selectedMember || !selectedReviewer}
               >

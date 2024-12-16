@@ -57,9 +57,6 @@ body {
   background-color: #35363f;
 }
 
-.status-tag.not-started {
-  background-color: #35363f;
-}
 
 .status-tag.in-progress {
   background-color:#474414;

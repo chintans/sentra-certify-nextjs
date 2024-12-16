@@ -16,14 +16,14 @@ export const ASSIGN_BUTTON_TEXT = "Assign";
 export const CANCEL_BUTTON_TEXT = "Cancel";
 
 export const REQUEST_STATUS_INPROGRESS="OnTime";
-export const REQUEST_STATUS_NOTSTARTED="Not Started";
+export const REQUEST_STATUS_NOTSTARTED="NotStarted";
 export const REQUEST_STATUS_COMPLETED="Completed";
 export const REQUEST_STATUS_ACTIONREQUIRED="ActionRequired";
 export const REQUEST_STATUS_DELAYED="Delayed";
 export const REQUEST_STATUS_ASSIGNED="Assigned";
 
 export const NEW_REQUEST_TAB = "New Request";
-export const ASSIGNED_REQUEST_TAB = "Ongoing Requests";
+export const ASSIGNED_REQUEST_TAB = "Ongoing";
 export const REQUEST_DATE_HEADER = "Request Date";
 export const COMPLETION_DATE_HEADER = "Completion Date";
 export const STATUS_HEADER = "Status";
