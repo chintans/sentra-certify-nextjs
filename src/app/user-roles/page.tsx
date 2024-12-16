@@ -14,6 +14,20 @@ interface User {
   };
 }
 
+const truncateEmail = (email: string) => {
+  const maxLength = 10; // Adjust this value as needed
+  if (email.length <= maxLength) return email;
+  
+  const atIndex = email.indexOf('@');
+  if (atIndex === -1) return `${email.slice(0, maxLength)}...`;
+  
+  const localPart = email.slice(0, atIndex);
+  const domain = email.slice(atIndex);
+  
+  if (localPart.length <= maxLength - 3) return email;
+  return `${localPart.slice(0, maxLength - 3)}...${domain}`;
+};
+
 export default function UserRolesPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,12 +106,19 @@ export default function UserRolesPage() {
               </div>
               <div className="table-body bg-grey-2 rounded border">
                 {users.map((user, index) => (
-                  <div key={index} className="table-row flex justify-between p-2 border-b last:border-b-0 hover:bg-gray-50">
+                  <div key={index} className="table-row flex justify-between p-2 border-b last:border-b-0">
                     <div className="table-cell w-1/4">
                       <div className="text-left">{user.firstName} {user.lastName}</div>
                     </div>
-                    <div className="table-cell w-2/5">
-                      <div className="text-left break-words whitespace-normal">{user.email}</div>
+                    <div className="table-cell w-1/5">
+                      <div className="group relative">
+                        <div className="text-gray-900 truncate">
+                          {truncateEmail(user.email)}
+                        </div>
+                        <div className="invisible group-hover:visible absolute z-10 bg-gray-900 text-white text-sm rounded py-1 px-2 -top-8 left-0 whitespace-nowrap">
+                          {user.email}
+                        </div>
+                      </div>
                     </div>
                     <div className="table-cell w-1/5">
                       <div className="text-left">{user.role.name}</div>
